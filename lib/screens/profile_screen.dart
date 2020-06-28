@@ -32,6 +32,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
     ////////Update User Data goes there.......
   }
 
+  Future<bool> _onWillPop() async {
+    return (await showDialog(
+          context: context,
+          builder: (context) => new AlertDialog(
+            title: new Text('Are you sure?'),
+            content: new Text('Do you want to exit an App'),
+            actions: <Widget>[
+              new FlatButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: new Text('No'),
+              ),
+              new FlatButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: new Text('Yes'),
+              ),
+            ],
+          ),
+        )) ??
+        false;
+  }
+
   void editButton() {
     setState(() {
       editMode = true;
@@ -159,39 +180,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: AppBar(
-        elevation: 0.0,
-        actions: <Widget>[
-          IconButton(
+    return WillPopScope(
+      onWillPop: () async {
+        return Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (ctx) => HomeScreen(),
+          ),
+        );
+      },
+      child: Scaffold(
+        key: _scaffoldKey,
+        appBar: AppBar(
+          elevation: 0.0,
+          actions: <Widget>[
+            IconButton(
+              onPressed: () {
+                editButton();
+              },
+              icon: Text("Edit"),
+            )
+          ],
+          leading: IconButton(
+            icon: editMode ? Icon(Icons.close) : Icon(Icons.arrow_back),
             onPressed: () {
-              editButton();
+              editMode
+                  ? closeButton()
+                  : Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (ctx) => HomeScreen(),
+                      ),
+                    );
             },
-            icon: Text("Edit"),
-          )
-        ],
-        leading: IconButton(
-          icon: editMode ? Icon(Icons.close) : Icon(Icons.arrow_back),
-          onPressed: () {
-            editMode
-                ? closeButton()
-                : Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (ctx) => HomeScreen(),
-                    ),
-                  );
-          },
+          ),
+          centerTitle: true,
+          title: Text("Profile"),
         ),
-        centerTitle: true,
-        title: Text("Profile"),
-      ),
-      body: Column(
-        children: <Widget>[
-          ///top part
-          topPart(context),
-          bottomPart(context),
-        ],
+        body: Column(
+          children: <Widget>[
+            ///top part
+            topPart(context),
+            bottomPart(context),
+          ],
+        ),
       ),
     );
   }

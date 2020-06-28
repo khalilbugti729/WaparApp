@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wapar/screens/admin.dart';
 import 'package:wapar/screens/home_screen.dart';
 
 void main() {
@@ -22,7 +23,7 @@ class MyHome extends StatelessWidget {
           displayColor: Colors.blue,
         ),
       ),
-      home: HomeScreen(),
+      home: Admin(),
     );
   }
 }
