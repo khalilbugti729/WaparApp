@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "930013453746",
+    "firebase_url": "https://wapar-d8ed8.firebaseio.com",
+    "project_id": "wapar-d8ed8",
+    "storage_bucket": "wapar-d8ed8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:930013453746:android:62c914355f4edc654298ab",
+        "android_client_info": {
+          "package_name": "com.example.wapar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "930013453746-shm7e5e7qkk3i4ovguqd37g4ljqv307k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCU00X9cmEBA6eq02ouxuxISggdC4JVDBo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "930013453746-shm7e5e7qkk3i4ovguqd37g4ljqv307k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
