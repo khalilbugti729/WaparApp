@@ -1,23 +1,41 @@
+import 'package:provider/provider.dart';
+import 'package:wapar/provider/auth_provider.dart';
+import 'package:wapar/screens/signup_screen.dart';
+import 'package:wapar/widgets/auth_end_text.dart';
 import 'package:wapar/widgets/my_button.dart';
 import 'package:wapar/widgets/my_text_field.dart';
 import 'package:flutter/material.dart';
 
-class LoginScreen extends StatefulWidget {
-  static Pattern pattern =
-      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-  @override
-  _LoginScreenState createState() => _LoginScreenState();
-}
+import 'home_screen.dart';
 
-class _LoginScreenState extends State<LoginScreen> {
+class LoginScreen extends StatelessWidget {
   final TextEditingController _password = TextEditingController();
   final TextEditingController _email = TextEditingController();
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  RegExp regex = new RegExp(LoginScreen.pattern);
+  static Pattern emailPattern =
+      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+  RegExp emailRegix = new RegExp(emailPattern);
 
-  void submitForm() {}
+  void checkVerify(context, AuthProvider authProvider) async {
+    Object value =
+        await authProvider.login(email: _email.text, password: _password.text);
 
-  void checkValid() {
+    if (value == null) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (ctx) => HomeScreen(),
+        ),
+      );
+    }
+    _scaffoldKey.currentState.showSnackBar(
+      SnackBar(
+        backgroundColor: Theme.of(context).errorColor,
+        content: value != null ? Text(value) : Container(),
+      ),
+    );
+  }
+
+  void checkValid(context, AuthProvider authProvider) {
     bool password = _password.text.trim().isEmpty;
     bool email = _email.text.trim().isEmpty;
 
@@ -40,6 +58,15 @@ class _LoginScreenState extends State<LoginScreen> {
       );
       return;
     }
+    if (!emailRegix.hasMatch(_email.text)) {
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          backgroundColor: Theme.of(context).errorColor,
+          content: Text("Email is not Valid"),
+        ),
+      );
+      return;
+    }
     if (password) {
       _scaffoldKey.currentState.showSnackBar(
         SnackBar(
@@ -49,7 +76,16 @@ class _LoginScreenState extends State<LoginScreen> {
       );
       return;
     }
-    submitForm();
+    if (_password.text.length <= 7) {
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          backgroundColor: Theme.of(context).errorColor,
+          content: Text("Password must have 8 characters"),
+        ),
+      );
+      return;
+    }
+    checkVerify(context, authProvider);
   }
 
   Widget topPart() {
@@ -100,21 +136,41 @@ class _LoginScreenState extends State<LoginScreen> {
       body: SafeArea(
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              topPart(),
-              SizedBox(height: 30),
-              bodyPart(),
-              SizedBox(height: 10),
-              MyButton(
-                text: "Login",
-                whenPress: () {
-                  checkValid();
-                },
-              )
-            ],
-          ),
+          child: Consumer<AuthProvider>(builder: (ctx, authProvider, _) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                topPart(),
+                SizedBox(height: 30),
+                bodyPart(),
+                SizedBox(height: 10),
+                authProvider.loading
+                    ? Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : MyButton(
+                        text: "Login",
+                        whenPress: () {
+                          checkValid(context, authProvider);
+                        },
+                      ),
+                SizedBox(
+                  height: 20,
+                ),
+                AuthEndText(
+                  firstText: "don't have an account",
+                  buttonText: "Signup",
+                  whenPressed: () {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (ctx) => SignupScreen(),
+                      ),
+                    );
+                  },
+                )
+              ],
+            );
+          }),
         ),
       ),
     );

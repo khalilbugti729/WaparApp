@@ -1,5 +1,11 @@
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:wapar/model/user.dart';
+import 'package:wapar/provider/auth_provider.dart';
+import 'package:wapar/provider/product_povider.dart';
+import 'package:wapar/screens/home_screen.dart';
+import 'package:wapar/screens/login_screen.dart';
+import 'package:wapar/widgets/auth_end_text.dart';
 import 'package:wapar/widgets/my_button.dart';
 import 'package:wapar/widgets/my_text_field.dart';
 import 'package:flutter/material.dart';
@@ -53,6 +59,7 @@ class _SignupScreenState extends State<SignupScreen> {
     });
   }
 
+  var provider;
   Future profileImage(ImageSource mySource) async {
     final pickedFile = await ImagePicker()
         .getImage(
@@ -107,49 +114,32 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  void checkVerify() async {
-    try {
-      AuthResult authResult = await _auth.createUserWithEmailAndPassword(
-          email: _email.text.trim(), password: _password.text.trim());
-      User user = User(
-          userPhoneNumber: int.parse(_phoneNumber.text),
-          userId: authResult.user.uid,
-          userImage: _image.path,
-          userEmail: _email.text,
-          userGender: _gender,
-          userAddress: _address.text,
-          userName: _fullName.text);
-
-      Firestore.instance.collection("User").document(user.userId).setData({
-        "userPhoneNumber": _phoneNumber.text,
-        "userId": user.userId,
-        "userImage": user.userImage,
-        "userEmail": user.userEmail,
-        "userGender": user.userGender,
-        "userAddress": user.userAddress
-      });
-    } on PlatformException catch (error) {
-      var message = "error: Check your inputs";
-      if (error.message != null) {
-        message = error.message;
-        _scaffoldKey.currentState.showSnackBar(
-          SnackBar(
-            backgroundColor: Theme.of(context).errorColor,
-            content: Text(message),
-          ),
-        );
-      }
-    } catch (error) {
-      _scaffoldKey.currentState.showSnackBar(
-        SnackBar(
-          backgroundColor: Theme.of(context).errorColor,
-          content: Text(error),
+  void checkVerify(AuthProvider authProvider) async {
+    Object value = await authProvider.signUp(
+      address: _address.text,
+      email: _email.text,
+      fullName: _fullName.text,
+      gender: _gender,
+      image: _image.path,
+      password: _password.text,
+      phoneNumber: int.parse(_phoneNumber.text),
+    );
+    if (value == null) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (ctx) => HomeScreen(),
         ),
       );
     }
+    _scaffoldKey.currentState.showSnackBar(
+      SnackBar(
+        backgroundColor: Theme.of(context).errorColor,
+        content: value != null ? Text(value) : Container(),
+      ),
+    );
   }
 
-  void checkValid() {
+  void checkValid(AuthProvider authProvider) {
     bool fullName = _fullName.text.trim().isEmpty;
     bool password = _password.text.trim().isEmpty;
     bool confirmPassword = _confirmPassword.text.trim().isEmpty;
@@ -280,7 +270,7 @@ class _SignupScreenState extends State<SignupScreen> {
       return;
     }
 
-    checkVerify();
+    checkVerify(authProvider);
   }
 
   Widget topPart() {
@@ -395,21 +385,41 @@ class _SignupScreenState extends State<SignupScreen> {
         child: SingleChildScrollView(
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                topPart(),
-                SizedBox(height: 30),
-                bodyPart(),
-                SizedBox(height: 10),
-                MyButton(
-                  text: "Signup",
-                  whenPress: () {
-                    checkValid();
-                  },
-                )
-              ],
-            ),
+            child: Consumer<AuthProvider>(builder: (ctx, authProvider, _) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  topPart(),
+                  SizedBox(height: 30),
+                  bodyPart(),
+                  SizedBox(height: 10),
+                  authProvider.loading
+                      ? Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : MyButton(
+                          text: "Signup",
+                          whenPress: () {
+                            checkValid(authProvider);
+                          },
+                        ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  AuthEndText(
+                    firstText: "already have an account",
+                    buttonText: "Login",
+                    whenPressed: () {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (ctx) => LoginScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              );
+            }),
           ),
         ),
       ),

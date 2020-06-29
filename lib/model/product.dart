@@ -15,6 +15,6 @@ class Product {
     @required this.productAddress,
     @required this.productCompany,
     @required this.productModel,
-    @required this.productAddress,
+    @required this.productPrice,
   });
 }
