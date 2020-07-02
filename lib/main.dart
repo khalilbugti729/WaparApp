@@ -1,9 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:wapar/provider/auth_provider.dart';
 import 'package:wapar/provider/product_povider.dart';
-import 'package:wapar/screens/admin.dart';
 import 'package:wapar/screens/home_screen.dart';
+import 'package:wapar/screens/login_screen.dart';
 import 'package:wapar/screens/signup_screen.dart';
 
 void main() {
@@ -13,17 +13,9 @@ void main() {
 class MyHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<AuthProvider>(
-          create: (_) => AuthProvider(),
-          lazy: false,
-        ),
-        ChangeNotifierProvider<ProductProvider>(
-          create: (_) => ProductProvider(),
-          lazy: false,
-        ),
-      ],
+    return ChangeNotifierProvider<ProductProvider>(
+      create: (_) => ProductProvider(),
+      lazy: false,
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
@@ -38,7 +30,14 @@ class MyHome extends StatelessWidget {
             displayColor: Colors.blue,
           ),
         ),
-        home: SignupScreen(),
+        home: StreamBuilder(
+            stream: FirebaseAuth.instance.onAuthStateChanged,
+            builder: (ctx, userSnapshot) {
+              if (userSnapshot.hasData) {
+                return HomeScreen();
+              }
+              return LoginScreen();
+            }),
       ),
     );
   }

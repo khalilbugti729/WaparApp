@@ -1,7 +1,4 @@
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:wapar/model/user.dart';
-import 'package:wapar/provider/auth_provider.dart';
 import 'package:wapar/provider/product_povider.dart';
 import 'package:wapar/screens/home_screen.dart';
 import 'package:wapar/screens/login_screen.dart';
@@ -11,7 +8,6 @@ import 'package:wapar/widgets/my_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'dart:io';
 
@@ -114,8 +110,8 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  void checkVerify(AuthProvider authProvider) async {
-    Object value = await authProvider.signUp(
+  void checkVerify(ProductProvider provider) async {
+    Object value = await provider.signUp(
       address: _address.text,
       email: _email.text,
       fullName: _fullName.text,
@@ -139,7 +135,7 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  void checkValid(AuthProvider authProvider) {
+  void checkValid(ProductProvider provider) {
     bool fullName = _fullName.text.trim().isEmpty;
     bool password = _password.text.trim().isEmpty;
     bool confirmPassword = _confirmPassword.text.trim().isEmpty;
@@ -270,7 +266,7 @@ class _SignupScreenState extends State<SignupScreen> {
       return;
     }
 
-    checkVerify(authProvider);
+    checkVerify(provider);
   }
 
   Widget topPart() {
@@ -385,7 +381,7 @@ class _SignupScreenState extends State<SignupScreen> {
         child: SingleChildScrollView(
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-            child: Consumer<AuthProvider>(builder: (ctx, authProvider, _) {
+            child: Consumer<ProductProvider>(builder: (ctx, provider, _) {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -393,14 +389,14 @@ class _SignupScreenState extends State<SignupScreen> {
                   SizedBox(height: 30),
                   bodyPart(),
                   SizedBox(height: 10),
-                  authProvider.loading
+                  provider.loading
                       ? Center(
                           child: CircularProgressIndicator(),
                         )
                       : MyButton(
                           text: "Signup",
                           whenPress: () {
-                            checkValid(authProvider);
+                            checkValid(provider);
                           },
                         ),
                   SizedBox(

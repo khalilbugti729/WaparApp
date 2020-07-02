@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class DetailScreen extends StatelessWidget {
   final String description;
   final String name;
-  final String price;
+  final double price;
   final String address;
   final String phoneNumber;
   final String model;
@@ -44,7 +44,47 @@ class DetailScreen extends StatelessWidget {
     );
   }
 
-  Widget infoData({BuildContext ctx, String key, Object value}) {
+  Widget infoDataDouble({BuildContext ctx, String key, double value}) {
+    return Container(
+      padding: EdgeInsets.all(10),
+      color: Theme.of(ctx).primaryColor,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Text(
+            "$key:",
+            style: TextStyle(fontSize: 17),
+          ),
+          Text(
+            value.toString(),
+            style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget infoDataInt({BuildContext ctx, String key, int value}) {
+    return Container(
+      padding: EdgeInsets.all(10),
+      color: Theme.of(ctx).primaryColor,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Text(
+            "$key:",
+            style: TextStyle(fontSize: 17),
+          ),
+          Text(
+            value.toString(),
+            style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget infoDataString({BuildContext ctx, String key, String value}) {
     return Container(
       padding: EdgeInsets.all(10),
       color: Theme.of(ctx).primaryColor,
@@ -71,25 +111,30 @@ class DetailScreen extends StatelessWidget {
       body: Column(
         children: <Widget>[
           renderImage(ctx: context, img: image),
-          Expanded(child: infoData(ctx: context, key: "Name", value: name)),
+          Expanded(
+              child: infoDataString(ctx: context, key: "Name", value: name)),
           SizedBox(height: 10),
           Expanded(
-              child: infoData(
+              child: infoDataString(
                   ctx: context, key: "Description", value: description)),
           SizedBox(height: 10),
-          Expanded(child: infoData(ctx: context, key: "Price", value: price)),
+          Expanded(
+              child: infoDataDouble(ctx: context, key: "Price", value: price)),
           SizedBox(height: 10),
           Expanded(
-              child: infoData(
+              child: infoDataString(
                   ctx: context, key: "Phone Number", value: phoneNumber)),
           SizedBox(height: 10),
           Expanded(
-              child: infoData(ctx: context, key: "Address", value: address)),
-          SizedBox(height: 10),
-          Expanded(child: infoData(ctx: context, key: "Model", value: model)),
+              child:
+                  infoDataString(ctx: context, key: "Address", value: address)),
           SizedBox(height: 10),
           Expanded(
-              child: infoData(ctx: context, key: "Company", value: company)),
+              child: infoDataString(ctx: context, key: "Model", value: model)),
+          SizedBox(height: 10),
+          Expanded(
+              child:
+                  infoDataString(ctx: context, key: "Company", value: company)),
           SizedBox(height: 10),
         ],
       ),

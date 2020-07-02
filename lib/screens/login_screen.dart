@@ -1,11 +1,10 @@
 import 'package:provider/provider.dart';
-import 'package:wapar/provider/auth_provider.dart';
+import 'package:wapar/provider/product_povider.dart';
 import 'package:wapar/screens/signup_screen.dart';
 import 'package:wapar/widgets/auth_end_text.dart';
 import 'package:wapar/widgets/my_button.dart';
 import 'package:wapar/widgets/my_text_field.dart';
 import 'package:flutter/material.dart';
-
 import 'home_screen.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -16,9 +15,9 @@ class LoginScreen extends StatelessWidget {
       r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
   RegExp emailRegix = new RegExp(emailPattern);
 
-  void checkVerify(context, AuthProvider authProvider) async {
+  void checkVerify(context, ProductProvider provider) async {
     Object value =
-        await authProvider.login(email: _email.text, password: _password.text);
+        await provider.login(email: _email.text, password: _password.text);
 
     if (value == null) {
       Navigator.of(context).push(
@@ -35,7 +34,7 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  void checkValid(context, AuthProvider authProvider) {
+  void checkValid(context, ProductProvider authProvider) {
     bool password = _password.text.trim().isEmpty;
     bool email = _email.text.trim().isEmpty;
 
@@ -136,7 +135,7 @@ class LoginScreen extends StatelessWidget {
       body: SafeArea(
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-          child: Consumer<AuthProvider>(builder: (ctx, authProvider, _) {
+          child: Consumer<ProductProvider>(builder: (ctx, authProvider, _) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[

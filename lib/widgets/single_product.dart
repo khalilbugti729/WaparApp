@@ -1,52 +1,65 @@
 import 'package:flutter/material.dart';
 import 'package:wapar/screens/detail_screen.dart';
 
-class SingleProduct extends StatefulWidget {
+class SingleProduct extends StatelessWidget {
+  final String type;
   final String company;
   final String model;
   final double price;
+  final String description;
+  final String address;
+  final String phoneNumber;
+  final String image;
+  final String name;
+  SingleProduct(
+      {this.phoneNumber,
+      this.type,
+      this.name,
+      this.image,
+      this.description,
+      this.address,
+      this.company,
+      this.model,
+      this.price});
 
-  SingleProduct({this.company, this.model, this.price});
-
-  @override
-  _SingleProductState createState() => _SingleProductState();
-}
-
-class _SingleProductState extends State<SingleProduct> {
-  Widget headPart() {
-    return ListTile(
-      leading: CircleAvatar(
-        backgroundImage: AssetImage('assets/k.jpg'),
-      ),
-      title: Text(
-        "Khalil Bugti",
-        style: TextStyle(color: Colors.white),
-      ),
-      subtitle: Text(
-        "New",
-        style: TextStyle(color: Colors.white),
-      ),
-      trailing: Text(
-        "3 hours ago",
-        style: TextStyle(color: Colors.white),
+  Widget headPart(context) {
+    return Container(
+      color: Theme.of(context).primaryColor,
+      child: ListTile(
+        leading: CircleAvatar(
+          backgroundImage: AssetImage('assets/k.jpg'),
+        ),
+        title: Text(
+          "Khalil Bugti",
+          style: TextStyle(color: Colors.white),
+        ),
+        subtitle: Text(
+          type,
+          style: TextStyle(color: Colors.white),
+        ),
+        trailing: Text(
+          "3 hours ago",
+          style: TextStyle(color: Colors.white),
+        ),
       ),
     );
   }
 
-  Widget imagePart() {
+  Widget imagePart(context) {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (ctx) => DetailScreen(
-                description: 'Box is available',
-                price: "4500",
-                address: "phong Colony",
-                phoneNumber: "12345678",
-                model: "j7",
-                company: "Samsung",
-                image: 'assets/k.jpg',
-                name: "Car"),
+              description: description,
+              price: price,
+              address: address,
+              phoneNumber: phoneNumber,
+              model: model,
+              company: company,
+              image: image,
+              name: name,
+            ),
           ),
         );
       },
@@ -60,22 +73,23 @@ class _SingleProductState extends State<SingleProduct> {
     );
   }
 
-  Widget bottomPart() {
+  Widget bottomPart(context) {
     return Container(
+      color: Theme.of(context).primaryColor,
       padding: EdgeInsets.all(10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Text(
-            "Rs:4000",
+            'Rs:${price.toString()}',
             style: TextStyle(fontSize: 17),
           ),
           Text(
-            "Samsung",
+            company,
             style: TextStyle(fontSize: 17),
           ),
           Text(
-            "j7 Pro",
+            model,
             style: TextStyle(fontSize: 17),
           )
         ],
@@ -86,12 +100,11 @@ class _SingleProductState extends State<SingleProduct> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(border: Border.all(width: 5)),
       child: Column(
         children: <Widget>[
-          headPart(),
-          imagePart(),
-          bottomPart(),
+          headPart(context),
+          imagePart(context),
+          bottomPart(context),
         ],
       ),
     );

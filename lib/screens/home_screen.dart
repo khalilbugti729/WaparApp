@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:wapar/provider/product_povider.dart';
 import 'package:wapar/screens/admin.dart';
 import 'package:wapar/screens/profile_screen.dart';
 import 'package:wapar/widgets/single_product.dart';
@@ -10,6 +13,95 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  // @override
+  // initState() {
+  //   super.initState();
+  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+  //     var provider = Provider.of<ProductProvider>(context, listen: false);
+  //     provider.fetchProducts();
+  //   });
+  // }
+  Widget myDrawer() {
+    return Drawer(
+      child: Container(
+        color: Colors.black,
+        child: Column(
+          children: <Widget>[
+            UserAccountsDrawerHeader(
+              currentAccountPicture: CircleAvatar(
+                backgroundImage: AssetImage("assets/k.jpg"),
+              ),
+              accountName: Text("khalil"),
+              accountEmail: Text("khaliljan924@gmail.com"),
+            ),
+            singleListTile(
+              myIcon: Icons.home,
+              myText: "Home",
+              whenPressed: () {
+                Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (ctx) => HomeScreen()));
+              },
+            ),
+            SizedBox(
+              height: 8,
+            ),
+            singleListTile(
+              myIcon: Icons.add,
+              myText: "Admin",
+              whenPressed: () {
+                Navigator.pushReplacement(
+                    context, MaterialPageRoute(builder: (ctx) => Admin()));
+              },
+            ),
+            SizedBox(
+              height: 8,
+            ),
+            singleListTile(
+              myIcon: Icons.category,
+              myText: "Category",
+              whenPressed: () {},
+            ),
+            SizedBox(
+              height: 8,
+            ),
+            singleListTile(
+              myIcon: Icons.person,
+              myText: "Profile",
+              whenPressed: () {
+                Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (ctx) => ProfileScreen()));
+              },
+            ),
+            SizedBox(
+              height: 8,
+            ),
+            singleListTile(
+              myIcon: Icons.info,
+              myText: "About",
+              whenPressed: () {},
+            ),
+            SizedBox(
+              height: 8,
+            ),
+            singleListTile(
+              myIcon: Icons.call,
+              myText: "Contact",
+              whenPressed: () {},
+            ),
+            SizedBox(
+              height: 8,
+            ),
+            singleListTile(
+              myIcon: Icons.exit_to_app,
+              myText: "Logout",
+              whenPressed: () {},
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget singleListTile(
       {IconData myIcon, String myText, Function whenPressed}) {
     return Container(
@@ -28,98 +120,54 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color(0xff022534),
-        drawer: Drawer(
-          child: Container(
-            color: Colors.black,
-            child: Column(
-              children: <Widget>[
-                UserAccountsDrawerHeader(
-                  currentAccountPicture: CircleAvatar(
-                    backgroundImage: AssetImage("assets/k.jpg"),
+      drawer: myDrawer(),
+      appBar: AppBar(
+        elevation: 0.0,
+        centerTitle: true,
+        title: Text("Wapar"),
+      ),
+      body: StreamBuilder(
+        stream: Firestore.instance.collection("Product").snapshots(),
+        builder: (ctx, snapShot) {
+          if (snapShot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          var document = snapShot.data.documents;
+          // print(snapShot.hasData);
+          return ListView.builder(
+            itemBuilder: (ctx, index) {
+              return Column(
+                children: <Widget>[
+                  SizedBox(
+                    height: 10,
                   ),
-                  accountName: Text("khalil"),
-                  accountEmail: Text("khaliljan924@gmail.com"),
-                ),
-                singleListTile(
-                  myIcon: Icons.home,
-                  myText: "Home",
-                  whenPressed: () {
-                    Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (ctx) => HomeScreen()));
-                  },
-                ),
-                SizedBox(
-                  height: 8,
-                ),
-                singleListTile(
-                  myIcon: Icons.add,
-                  myText: "Admin",
-                  whenPressed: () {
-                    Navigator.pushReplacement(
-                        context, MaterialPageRoute(builder: (ctx) => Admin()));
-                  },
-                ),
-                SizedBox(
-                  height: 8,
-                ),
-                singleListTile(
-                  myIcon: Icons.category,
-                  myText: "Category",
-                  whenPressed: () {},
-                ),
-                SizedBox(
-                  height: 8,
-                ),
-                singleListTile(
-                  myIcon: Icons.person,
-                  myText: "Profile",
-                  whenPressed: () {
-                    Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (ctx) => ProfileScreen()));
-                  },
-                ),
-                SizedBox(
-                  height: 8,
-                ),
-                singleListTile(
-                  myIcon: Icons.info,
-                  myText: "About",
-                  whenPressed: () {},
-                ),
-                SizedBox(
-                  height: 8,
-                ),
-                singleListTile(
-                  myIcon: Icons.call,
-                  myText: "Contact",
-                  whenPressed: () {},
-                ),
-                SizedBox(
-                  height: 8,
-                ),
-                singleListTile(
-                  myIcon: Icons.exit_to_app,
-                  myText: "Logout",
-                  whenPressed: () {},
-                ),
-              ],
-            ),
-          ),
-        ),
-        appBar: AppBar(
-          elevation: 0.0,
-          centerTitle: true,
-          title: Text("Wapar"),
-        ),
-        body: ListView(
-          children: <Widget>[
-            SingleProduct(company: "Samsung", price: 250.0, model: "A7 pro"),
-            SingleProduct(company: "Samsung", price: 250.0, model: "A7 pro"),
-            SingleProduct(company: "Samsung", price: 250.0, model: "A7 pro"),
-            SingleProduct(company: "Samsung", price: 250.0, model: "A7 pro"),
-            SingleProduct(company: "Samsung", price: 250.0, model: "A7 pro"),
-          ],
-        ));
+                  SingleProduct(
+                    type: document[index]['productType'],
+                    address: document[index]['productAddress'],
+                    description: document[index]['productDescription'],
+                    image: 'assets/k.jpg',
+                    name: document[index]['productName'],
+                    phoneNumber: document[index]['productPhoneNumber'],
+                    company: document[index]['productCompany'],
+                    price: double.parse(document[index]['productPrice']),
+                    model: document[index]['productModel'],
+                  ),
+                ],
+              );
+            },
+            itemCount: document.length,
+          );
+          // children: <Widget>[
+          //   SingleProduct(company: "Samsung", price: 250.0, model: "A7 pro"),
+          //   SingleProduct(company: "Samsung", price: 250.0, model: "A7 pro"),
+          //   SingleProduct(company: "Samsung", price: 250.0, model: "A7 pro"),
+          //   SingleProduct(company: "Samsung", price: 250.0, model: "A7 pro"),
+          //   SingleProduct(company: "Samsung", price: 250.0, model: "A7 pro"),
+          // ],
+        },
+      ),
+    );
   }
 }

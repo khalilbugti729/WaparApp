@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:wapar/provider/product_povider.dart';
+import 'package:wapar/screens/home_screen.dart';
 import 'package:wapar/widgets/my_button.dart';
+import 'package:wapar/widgets/my_list_tile.dart';
 import 'package:wapar/widgets/my_text_field.dart';
 
 import 'dart:io';
@@ -32,6 +36,14 @@ class _CreateScreenState extends State<CreateScreen> {
   TextEditingController _productModel = TextEditingController();
 
   TextEditingController _productPhoneNumber = TextEditingController();
+  String productType = 'Old';
+
+  void toggleProductType() {
+    setState(() {
+      productType == 'Old' ? productType = 'New' : productType = "Old";
+    });
+    print(productType);
+  }
 
   File _image;
 
@@ -89,9 +101,33 @@ class _CreateScreenState extends State<CreateScreen> {
     });
   }
 
-  void checkVerify() {}
+  void checkVerify(ProductProvider provider) async {
+    Object value = await provider.addProduct(
+      productType: productType,
+      address: _productAddress.text,
+      company: _productCompany.text,
+      description: _productDescription.text,
+      model: _productModel.text,
+      name: _productName.text,
+      phoneNumber: _productPhoneNumber.text,
+      price: _productPrice.text,
+    );
+    if (value == null) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (ctx) => HomeScreen(),
+        ),
+      );
+    }
+    widget.scaffoldKey.currentState.showSnackBar(
+      SnackBar(
+        backgroundColor: Theme.of(context).errorColor,
+        content: value == null ? Container() : Text(value),
+      ),
+    );
+  }
 
-  void checkValid(context) {
+  void checkValid(context, ProductProvider provider) {
     bool productName = _productName.text.trim().isEmpty;
     bool productDescription = _productDescription.text.trim().isEmpty;
     bool productPrice = _productPrice.text.trim().isEmpty;
@@ -204,8 +240,7 @@ class _CreateScreenState extends State<CreateScreen> {
       );
       return;
     }
-
-    checkVerify();
+    checkVerify(provider);
   }
 
   @override
@@ -239,6 +274,18 @@ class _CreateScreenState extends State<CreateScreen> {
         MyTextField(
           placeHolder: "Product Price",
           value: _productPrice,
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        InkWell(
+          onTap: () {
+            toggleProductType();
+          },
+          child: MyListTile(
+            myKey: 'ProductType',
+            value: productType,
+          ),
         ),
         SizedBox(
           height: 10,
@@ -283,10 +330,18 @@ class _CreateScreenState extends State<CreateScreen> {
         SizedBox(
           height: 10,
         ),
-        MyButton(
-          text: "Submit",
-          whenPress: () {
-            checkValid(context);
+        Consumer<ProductProvider>(
+          builder: (ctx, provider, child) {
+            return provider.loading
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : MyButton(
+                    text: "Submit",
+                    whenPress: () {
+                      checkValid(context, provider);
+                    },
+                  );
           },
         )
       ],
