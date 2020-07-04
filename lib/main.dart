@@ -30,6 +30,15 @@ class MyHome extends StatelessWidget {
             displayColor: Colors.blue,
           ),
         ),
+        // home: FutureBuilder(
+        //   future: FirebaseAuth.instance.currentUser(),
+        //   builder: (ctx, snapShot) {
+        //     if (snapShot.hasData) {
+        //       return HomeScreen();
+        //     }
+        //     return LoginScreen();
+        //   },
+        // ),
         home: StreamBuilder(
             stream: FirebaseAuth.instance.onAuthStateChanged,
             builder: (ctx, userSnapshot) {

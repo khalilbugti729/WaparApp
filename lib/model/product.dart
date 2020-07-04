@@ -1,6 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class Product {
+  String productId;
+  String image;
+  Timestamp timeStamp;
   String productType;
   String userId;
   String productName;
@@ -9,8 +13,11 @@ class Product {
   String productAddress;
   String productCompany;
   String productModel;
-  int productPhoneNumber;
+  String productPhoneNumber;
   Product({
+    @required this.productId,
+    @required this.image,
+    @required this.timeStamp,
     @required this.productType,
     @required this.userId,
     @required this.productPhoneNumber,

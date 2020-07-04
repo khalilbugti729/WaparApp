@@ -4,7 +4,7 @@ import 'my_list_tile.dart';
 class Profile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return ListView(
       children: <Widget>[
         MyListTile(
           myKey: "Full Name",

@@ -36,13 +36,12 @@ class _CreateScreenState extends State<CreateScreen> {
   TextEditingController _productModel = TextEditingController();
 
   TextEditingController _productPhoneNumber = TextEditingController();
-  String productType = 'Old';
+  String productType = 'USED';
 
   void toggleProductType() {
     setState(() {
-      productType == 'Old' ? productType = 'New' : productType = "Old";
+      productType == 'USED' ? productType = 'NEW' : productType = "USED";
     });
-    print(productType);
   }
 
   File _image;

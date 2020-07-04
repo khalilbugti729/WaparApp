@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wapar/provider/product_povider.dart';
 import 'package:wapar/screens/admin.dart';
+import 'package:wapar/screens/login_screen.dart';
 import 'package:wapar/screens/profile_screen.dart';
 import 'package:wapar/widgets/single_product.dart';
 
@@ -49,8 +51,8 @@ class _HomeScreenState extends State<HomeScreen> {
               myIcon: Icons.add,
               myText: "Admin",
               whenPressed: () {
-                Navigator.pushReplacement(
-                    context, MaterialPageRoute(builder: (ctx) => Admin()));
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (ctx) => Admin(0, null)));
               },
             ),
             SizedBox(
@@ -94,7 +96,16 @@ class _HomeScreenState extends State<HomeScreen> {
             singleListTile(
               myIcon: Icons.exit_to_app,
               myText: "Logout",
-              whenPressed: () {},
+              whenPressed: () {
+                setState(() {
+                  FirebaseAuth.instance.signOut();
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (ctx) => LoginScreen(),
+                    ),
+                  );
+                });
+              },
             ),
           ],
         ),
@@ -127,7 +138,10 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text("Wapar"),
       ),
       body: StreamBuilder(
-        stream: Firestore.instance.collection("Product").snapshots(),
+        stream: Firestore.instance
+            .collection("Product")
+            .orderBy('timeStamp', descending: true)
+            .snapshots(),
         builder: (ctx, snapShot) {
           if (snapShot.connectionState == ConnectionState.waiting) {
             return Center(

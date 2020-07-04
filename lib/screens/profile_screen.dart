@@ -40,6 +40,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void closeButton() {
     setState(() {
+      FocusScope.of(context).unfocus();
       editMode = false;
     });
   }
