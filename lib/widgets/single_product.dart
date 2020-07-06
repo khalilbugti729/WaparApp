@@ -9,13 +9,13 @@ class SingleProduct extends StatelessWidget {
   final String description;
   final String address;
   final String phoneNumber;
-  final String image;
+  final String imageUrl;
   final String name;
   SingleProduct(
       {this.phoneNumber,
       this.type,
       this.name,
-      this.image,
+      this.imageUrl,
       this.description,
       this.address,
       this.company,
@@ -57,7 +57,7 @@ class SingleProduct extends StatelessWidget {
               phoneNumber: phoneNumber,
               model: model,
               company: company,
-              image: image,
+              imageUrl: imageUrl,
               name: name,
             ),
           ),
@@ -65,8 +65,8 @@ class SingleProduct extends StatelessWidget {
       },
       child: Container(
         constraints: BoxConstraints.expand(height: 300),
-        child: Image.asset(
-          "assets/k.jpg",
+        child: Image.network(
+          imageUrl,
           fit: BoxFit.cover,
         ),
       ),

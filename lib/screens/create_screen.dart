@@ -93,7 +93,7 @@ class _CreateScreenState extends State<CreateScreen> {
   Future profileImage(ImageSource mySource) async {
     final pickedFile = await ImagePicker()
         .getImage(
-            source: mySource, imageQuality: 55, maxHeight: 480, maxWidth: 720)
+            source: mySource, imageQuality: 75, maxHeight: 1024, maxWidth: 1536)
         .whenComplete(() => Navigator.of(context).pop());
     setState(() {
       _image = File(pickedFile.path);
@@ -110,6 +110,7 @@ class _CreateScreenState extends State<CreateScreen> {
       name: _productName.text,
       phoneNumber: _productPhoneNumber.text,
       price: _productPrice.text,
+      image: _image,
     );
     if (value == null) {
       Navigator.of(context).pushReplacement(
@@ -315,14 +316,16 @@ class _CreateScreenState extends State<CreateScreen> {
             _showMyDialog();
           },
           child: Container(
+            color: Colors.white,
             constraints: BoxConstraints.expand(height: 200),
             child: _image == null
                 ? Image.asset(
-                    "assets/k.jpg",
+                    "assets/car.png",
                     fit: BoxFit.cover,
                   )
                 : Image.file(
                     _image,
+                    fit: BoxFit.cover,
                   ),
           ),
         ),

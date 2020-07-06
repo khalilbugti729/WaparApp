@@ -161,7 +161,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     type: document[index]['productType'],
                     address: document[index]['productAddress'],
                     description: document[index]['productDescription'],
-                    image: 'assets/k.jpg',
+                    imageUrl: document[index]['imageUrl'],
                     name: document[index]['productName'],
                     phoneNumber: document[index]['productPhoneNumber'],
                     company: document[index]['productCompany'],

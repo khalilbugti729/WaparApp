@@ -8,7 +8,7 @@ class DetailScreen extends StatelessWidget {
   final String phoneNumber;
   final String model;
   final String company;
-  final String image;
+  final String imageUrl;
 
   DetailScreen(
       {@required this.description,
@@ -17,15 +17,18 @@ class DetailScreen extends StatelessWidget {
       @required this.phoneNumber,
       @required this.model,
       @required this.company,
-      @required this.image,
+      @required this.imageUrl,
       @required this.name});
 
   Widget renderImage({BuildContext ctx, String img}) {
     return Stack(
       children: <Widget>[
-        Container(
-          constraints: BoxConstraints.expand(height: 370),
-          child: Image.asset(img),
+        FittedBox(
+          // constraints: BoxConstraints.expand(height: 370),
+          child: Image.network(
+            img,
+            fit: BoxFit.fill,
+          ),
         ),
         Positioned(
           top: 30,
@@ -108,33 +111,23 @@ class DetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Column(
+      body: ListView(
         children: <Widget>[
-          renderImage(ctx: context, img: image),
-          Expanded(
-              child: infoDataString(ctx: context, key: "Name", value: name)),
+          renderImage(ctx: context, img: imageUrl),
           SizedBox(height: 10),
-          Expanded(
-              child: infoDataString(
-                  ctx: context, key: "Description", value: description)),
+          infoDataString(ctx: context, key: "Name", value: name),
           SizedBox(height: 10),
-          Expanded(
-              child: infoDataDouble(ctx: context, key: "Price", value: price)),
+          infoDataString(ctx: context, key: "Description", value: description),
           SizedBox(height: 10),
-          Expanded(
-              child: infoDataString(
-                  ctx: context, key: "Phone Number", value: phoneNumber)),
+          infoDataDouble(ctx: context, key: "Price", value: price),
           SizedBox(height: 10),
-          Expanded(
-              child:
-                  infoDataString(ctx: context, key: "Address", value: address)),
+          infoDataString(ctx: context, key: "Phone Number", value: phoneNumber),
           SizedBox(height: 10),
-          Expanded(
-              child: infoDataString(ctx: context, key: "Model", value: model)),
+          infoDataString(ctx: context, key: "Address", value: address),
           SizedBox(height: 10),
-          Expanded(
-              child:
-                  infoDataString(ctx: context, key: "Company", value: company)),
+          infoDataString(ctx: context, key: "Model", value: model),
+          SizedBox(height: 10),
+          infoDataString(ctx: context, key: "Company", value: company),
           SizedBox(height: 10),
         ],
       ),

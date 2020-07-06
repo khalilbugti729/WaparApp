@@ -1,5 +1,7 @@
 import 'dart:collection';
-
+import 'dart:io';
+import 'package:path/path.dart' as Path;
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:wapar/model/product.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -31,6 +33,14 @@ class ProductProvider with ChangeNotifier {
   // }
 
   UnmodifiableListView get allProducts => UnmodifiableListView(_allProducts);
+
+  Future<void> deleteImage(String imageFileUrl) async {
+    var fileUrl = Uri.decodeFull(Path.basename(imageFileUrl))
+        .replaceAll(new RegExp(r'(\?alt).*'), '');
+    final StorageReference firebaseStorageRef =
+        FirebaseStorage.instance.ref().child('images/$fileUrl');
+    await firebaseStorageRef.delete();
+  }
 
   // void editScreenData(
   //     {String name,
@@ -79,8 +89,11 @@ class ProductProvider with ChangeNotifier {
   //   });
   // }
 
-  Future<void> deleteProduct(String productId) {
-    return _db.collection('Product').document(productId).delete();
+  Future<void> deleteProduct(String productId, String imagePath) async {
+    await deleteImage(imagePath);
+    await _db.collection('Product').document(productId).delete();
+    notifyListeners();
+    return;
   }
 
   Future<Object> updateProduct(
@@ -92,24 +105,47 @@ class ProductProvider with ChangeNotifier {
       String address,
       String description,
       String phoneNumber,
-      String productId}) async {
+      String productId,
+      Object imageUrl,
+      String imagePath}) async {
     _isLoading = true;
     notifyListeners();
     var id = productId;
     var user = await _auth.currentUser();
     try {
-      await Firestore.instance.collection("Product").document(id).updateData({
-        "userId": user.uid,
-        "productPhoneNumber": phoneNumber,
-        "productName": name,
-        "productDescription": description,
-        "productAddress": address,
-        "productCompany": company,
-        "productModel": model,
-        "productPrice": price,
-        'productType': productType,
-        'timeStamp': Timestamp.now(),
-      });
+      if (imageUrl is File) {
+        Map<String, String> imageData =
+            await _uploadFile(imageUrl, editImagePath: imagePath);
+        await Firestore.instance.collection("Product").document(id).updateData({
+          "userId": user.uid,
+          "productPhoneNumber": phoneNumber,
+          "productName": name,
+          "productDescription": description,
+          "productAddress": address,
+          "productCompany": company,
+          "productModel": model,
+          "productPrice": price,
+          'productType': productType,
+          'timeStamp': Timestamp.now(),
+          'imageUrl': imageData['imageUrl'],
+          'imagePath': imagePath,
+        });
+      } else {
+        await Firestore.instance.collection("Product").document(id).updateData({
+          "userId": user.uid,
+          "productPhoneNumber": phoneNumber,
+          "productName": name,
+          "productDescription": description,
+          "productAddress": address,
+          "productCompany": company,
+          "productModel": model,
+          "productPrice": price,
+          'productType': productType,
+          'timeStamp': Timestamp.now(),
+          'imageUrl': imageUrl,
+          'imagePath': imagePath,
+        });
+      }
       _isLoading = false;
       notifyListeners();
       return null;
@@ -120,6 +156,24 @@ class ProductProvider with ChangeNotifier {
     }
   }
 
+  Future<Map<String, String>> _uploadFile(File _image,
+      {String editImagePath}) async {
+    String _imagePath = editImagePath == null ? _image.path : editImagePath;
+
+    StorageReference storageReference = FirebaseStorage.instance
+        .ref()
+        .child('images/${Path.basename(_imagePath)}');
+    StorageUploadTask uploadTask = storageReference.putFile(_image);
+    StorageTaskSnapshot task = await uploadTask.onComplete;
+    final String _imageUrl = (await task.ref.getDownloadURL());
+
+    Map<String, String> _downloadData = {
+      'imagePath': Path.basename(_imagePath),
+      'imageUrl': _imageUrl
+    };
+    return _downloadData;
+  }
+
   Future<Object> addProduct(
       {String name,
       String productType,
@@ -128,10 +182,11 @@ class ProductProvider with ChangeNotifier {
       String price,
       String address,
       String description,
-      String phoneNumber}) async {
+      String phoneNumber,
+      File image}) async {
     _isLoading = true;
     notifyListeners();
-
+    Map<String, String> imageData = await _uploadFile(image);
     var user = await _auth.currentUser();
     try {
       DocumentReference documentReference =
@@ -146,6 +201,8 @@ class ProductProvider with ChangeNotifier {
         "productCompany": company,
         "productModel": model,
         "productPrice": price,
+        'imageUrl': imageData['imageUrl'],
+        'imagePath': imageData['imagePath'],
         'productType': productType,
         'timeStamp': Timestamp.now(),
       });

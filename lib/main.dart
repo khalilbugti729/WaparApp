@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:wapar/provider/product_povider.dart';
 import 'package:wapar/screens/home_screen.dart';
 import 'package:wapar/screens/login_screen.dart';
-import 'package:wapar/screens/signup_screen.dart';
 
 void main() {
   runApp(MyHome());

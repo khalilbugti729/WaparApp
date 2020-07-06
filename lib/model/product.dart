@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 
 class Product {
   String productId;
-  String image;
+  String imageUrl;
+  String imagePath;
   Timestamp timeStamp;
   String productType;
   String userId;
@@ -15,8 +16,9 @@ class Product {
   String productModel;
   String productPhoneNumber;
   Product({
+    @required this.imagePath,
     @required this.productId,
-    @required this.image,
+    @required this.imageUrl,
     @required this.timeStamp,
     @required this.productType,
     @required this.userId,

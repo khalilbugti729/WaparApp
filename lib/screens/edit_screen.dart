@@ -30,29 +30,6 @@ class EditScreen extends StatefulWidget {
   final Product product;
   EditScreen(this.product, {this.scaffoldKey});
 
-  // final String productName;
-
-  // final String productDescription;
-  // final String image;
-  // final String productPrice;
-  // final String productAddress;
-  // final String productCompany;
-  // final String productModel;
-  // final String productPhoneNumber;
-  // final String productType;
-  // final scaffoldKey;
-  // EditScreen(
-  //     {this.image,
-  //     this.scaffoldKey,
-  //     this.productAddress,
-  //     this.productCompany,
-  //     this.productDescription,
-  //     this.productModel,
-  //     this.productName,
-  //     this.productPhoneNumber,
-  //     this.productPrice,
-  //     this.productType});
-
   static Pattern phoneNumberPattern =
       r'^((\+92)|(0092))-{0,1}\d{3}-{0,1}\d{7}$|^\d{11}$|^\d{4}-\d{7}$';
 
@@ -70,35 +47,7 @@ class _EditScreenState extends State<EditScreen> {
   TextEditingController _productPhoneNumber;
   String productType;
   String editImage;
-
-  // void startEdit(context) {
-  //   ProductProvider provider = Provider.of<ProductProvider>(context);
-
-  //   Product product = provider.updateProduct;
-
-  //   print("editProduct");
-  //   print(product.productName);
-
-  //   _productName = TextEditingController(text: product.productName);
-
-  //   _productDescription =
-  //       TextEditingController(text: product.productDescription);
-
-  //   _productPrice =
-  //       TextEditingController(text: product.productPrice.toString());
-
-  //   _productAddress = TextEditingController(text: product.productAddress);
-
-  //   _productCompany = TextEditingController(text: product.productCompany);
-
-  //   _productModel = TextEditingController(text: product.productModel);
-
-  //   _productPhoneNumber =
-  //       TextEditingController(text: product.productPhoneNumber);
-
-  //   productType = product.productType;
-  //   editImage = product.image;
-  // }
+  String imagePath;
 
   @override
   initState() {
@@ -121,7 +70,8 @@ class _EditScreenState extends State<EditScreen> {
       _productPhoneNumber =
           TextEditingController(text: widget.product.productPhoneNumber);
       productType = widget.product.productType;
-      editImage = widget.product.image;
+      editImage = widget.product.imageUrl;
+      imagePath = widget.product.imagePath;
     }
   }
 
@@ -190,6 +140,8 @@ class _EditScreenState extends State<EditScreen> {
   }
 
   void checkVerify(ProductProvider provider) async {
+    var image = _image == null ? editImage : _image;
+
     Object value = await provider.updateProduct(
       productType: productType,
       address: _productAddress.text,
@@ -200,6 +152,8 @@ class _EditScreenState extends State<EditScreen> {
       phoneNumber: _productPhoneNumber.text,
       price: _productPrice.text,
       productId: widget.product.productId,
+      imagePath: imagePath,
+      imageUrl: image,
     );
     if (value == null) {
       Navigator.of(context).pushReplacement(
@@ -410,7 +364,7 @@ class _EditScreenState extends State<EditScreen> {
                 child: Container(
                   constraints: BoxConstraints.expand(height: 200),
                   child: _image == null
-                      ? Image.asset(
+                      ? Image.network(
                           editImage,
                           fit: BoxFit.cover,
                         )

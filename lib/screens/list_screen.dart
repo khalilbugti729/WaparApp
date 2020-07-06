@@ -56,7 +56,7 @@ class _ListScreenState extends State<ListScreen> {
                               Product product = Product(
                                 productId: document[index]['productId'],
                                 timeStamp: document[index]['timeStamp'],
-                                image: 'assets/k.jpg',
+                                imageUrl: document[index]['imageUrl'],
                                 productType: document[index]['productType'],
                                 userId: document[index]['userId'],
                                 productPhoneNumber: document[index]
@@ -71,7 +71,10 @@ class _ListScreenState extends State<ListScreen> {
                                 productModel: document[index]['productModel'],
                                 productPrice: double.parse(
                                     document[index]['productPrice']),
+                                imagePath: document[index]['imagePath'],
                               );
+                              print("from List screen2 ");
+                              print(product.imagePath);
                               // ProductProvider provider =
                               //     Provider.of<ProductProvider>(context);
                               // provider.editScreenData(
@@ -102,7 +105,8 @@ class _ListScreenState extends State<ListScreen> {
                         color: Theme.of(ctx).errorColor,
                       ),
                       onPressed: () {
-                        _showMyDialog(document[index]['productId']);
+                        _showMyDialog(document[index]['productId'],
+                            document[index]['imagePath']);
                       },
                     ),
                   ),
@@ -113,7 +117,7 @@ class _ListScreenState extends State<ListScreen> {
         ));
   }
 
-  Future<void> _showMyDialog(String productId) async {
+  Future<void> _showMyDialog(String productId, String imagePath) async {
     return showDialog<void>(
       context: context, // user must tap button!
       builder: (BuildContext context) {
@@ -134,9 +138,8 @@ class _ListScreenState extends State<ListScreen> {
                                 ProductProvider provider =
                                     Provider.of<ProductProvider>(context,
                                         listen: false);
-                                provider.deleteProduct(productId);
+                                provider.deleteProduct(productId, imagePath);
                                 Navigator.of(context).pop();
-                                setState(() {});
                               },
                               child: Text(
                                 "Yes",
@@ -171,6 +174,11 @@ class _ListScreenState extends State<ListScreen> {
           );
         }
         var document = snapshot.data.documents;
+        if (document.length == 0) {
+          return Center(
+            child: Text("Nothing to View"),
+          );
+        }
 
         return ListView.builder(
             itemCount: document.length,

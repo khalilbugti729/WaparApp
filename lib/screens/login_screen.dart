@@ -5,15 +5,33 @@ import 'package:wapar/widgets/auth_end_text.dart';
 import 'package:wapar/widgets/my_button.dart';
 import 'package:wapar/widgets/my_text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:wapar/widgets/password_text_field.dart';
 import 'home_screen.dart';
 
-class LoginScreen extends StatelessWidget {
-  final TextEditingController _password = TextEditingController();
-  final TextEditingController _email = TextEditingController();
-  GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+class LoginScreen extends StatefulWidget {
   static Pattern emailPattern =
       r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-  RegExp emailRegix = new RegExp(emailPattern);
+
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  bool showPassword = true;
+
+  void togglePassword() {
+    setState(() {
+      showPassword = !showPassword;
+    });
+  }
+
+  final TextEditingController _password = TextEditingController();
+
+  final TextEditingController _email = TextEditingController();
+
+  GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  RegExp emailRegix = new RegExp(LoginScreen.emailPattern);
 
   void checkVerify(context, ProductProvider provider) async {
     Object value =
@@ -119,10 +137,11 @@ class LoginScreen extends StatelessWidget {
           value: _email,
         ),
         SizedBox(height: 10),
-        MyTextField(
-          placeHolder: "Password",
-          value: _password,
-        ),
+        PasswordTextField(
+            placeHolder: 'Password',
+            value: _password,
+            showPassword: showPassword,
+            togglePassword: togglePassword),
       ],
     );
   }
@@ -131,7 +150,6 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: Colors.black,
       body: SafeArea(
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
