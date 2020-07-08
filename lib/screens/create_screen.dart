@@ -16,13 +16,15 @@ class CreateScreen extends StatefulWidget {
   static Pattern phoneNumberPattern =
       r'^((\+92)|(0092))-{0,1}\d{3}-{0,1}\d{7}$|^\d{11}$|^\d{4}-\d{7}$';
 
+  static Pattern pricePattern = r"^[0-9]+$";
+
   @override
   _CreateScreenState createState() => _CreateScreenState();
 }
 
 class _CreateScreenState extends State<CreateScreen> {
   RegExp phoneRegix = new RegExp(CreateScreen.phoneNumberPattern);
-
+  RegExp priceRegix = new RegExp(CreateScreen.pricePattern);
   TextEditingController _productName = TextEditingController();
 
   TextEditingController _productDescription = TextEditingController();
@@ -161,6 +163,15 @@ class _CreateScreenState extends State<CreateScreen> {
       );
       return;
     }
+    if (_productName.text.length >= 13) {
+      widget.scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          backgroundColor: Theme.of(context).errorColor,
+          content: Text("Name must be 12 characters"),
+        ),
+      );
+      return;
+    }
 
     if (productCompany) {
       print("company is empy");
@@ -168,6 +179,16 @@ class _CreateScreenState extends State<CreateScreen> {
         SnackBar(
           backgroundColor: Theme.of(context).errorColor,
           content: Text("Product Company is Empty"),
+        ),
+      );
+      return;
+    }
+
+    if (_productCompany.text.length >= 13) {
+      widget.scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          backgroundColor: Theme.of(context).errorColor,
+          content: Text("Company must be 12 characters"),
         ),
       );
       return;
@@ -183,11 +204,31 @@ class _CreateScreenState extends State<CreateScreen> {
       return;
     }
 
+    if (_productModel.text.length >= 13) {
+      widget.scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          backgroundColor: Theme.of(context).errorColor,
+          content: Text("Model must be 12 characters"),
+        ),
+      );
+      return;
+    }
+
     if (productPrice) {
       widget.scaffoldKey.currentState.showSnackBar(
         SnackBar(
           backgroundColor: Theme.of(context).errorColor,
           content: Text("Product Price is Empty"),
+        ),
+      );
+      return;
+    }
+
+    if (!priceRegix.hasMatch(_productPrice.text)) {
+      widget.scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          backgroundColor: Theme.of(context).errorColor,
+          content: Text("Price must be Numbers"),
         ),
       );
       return;
@@ -202,11 +243,31 @@ class _CreateScreenState extends State<CreateScreen> {
       );
       return;
     }
+
+    if (_productAddress.text.length >= 25) {
+      widget.scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          backgroundColor: Theme.of(context).errorColor,
+          content: Text("Address must be 24 characters"),
+        ),
+      );
+      return;
+    }
+
     if (productDescription) {
       widget.scaffoldKey.currentState.showSnackBar(
         SnackBar(
           backgroundColor: Theme.of(context).errorColor,
           content: Text("Product Description is Empty"),
+        ),
+      );
+      return;
+    }
+    if (_productDescription.text.length >= 16) {
+      widget.scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          backgroundColor: Theme.of(context).errorColor,
+          content: Text("Description must be 15 characters"),
         ),
       );
       return;
@@ -251,6 +312,7 @@ class _CreateScreenState extends State<CreateScreen> {
           height: 10,
         ),
         MyTextField(
+          myKeyboardtypeNumber: false,
           placeHolder: "Product Name",
           value: _productName,
         ),
@@ -258,6 +320,7 @@ class _CreateScreenState extends State<CreateScreen> {
           height: 10,
         ),
         MyTextField(
+          myKeyboardtypeNumber: false,
           placeHolder: "Product Company",
           value: _productCompany,
         ),
@@ -265,6 +328,7 @@ class _CreateScreenState extends State<CreateScreen> {
           height: 10,
         ),
         MyTextField(
+          myKeyboardtypeNumber: false,
           placeHolder: "Product Model",
           value: _productModel,
         ),
@@ -272,6 +336,7 @@ class _CreateScreenState extends State<CreateScreen> {
           height: 10,
         ),
         MyTextField(
+          myKeyboardtypeNumber: true,
           placeHolder: "Product Price",
           value: _productPrice,
         ),
@@ -291,6 +356,7 @@ class _CreateScreenState extends State<CreateScreen> {
           height: 10,
         ),
         MyTextField(
+          myKeyboardtypeNumber: false,
           placeHolder: "Product Address",
           value: _productAddress,
         ),
@@ -298,6 +364,7 @@ class _CreateScreenState extends State<CreateScreen> {
           height: 10,
         ),
         MyTextField(
+          myKeyboardtypeNumber: false,
           placeHolder: "Product Description",
           value: _productDescription,
         ),
@@ -305,6 +372,7 @@ class _CreateScreenState extends State<CreateScreen> {
           height: 10,
         ),
         MyTextField(
+          myKeyboardtypeNumber: false,
           placeHolder: "Phone Number",
           value: _productPhoneNumber,
         ),

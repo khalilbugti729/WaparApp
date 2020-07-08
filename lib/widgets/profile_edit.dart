@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:wapar/model/user.dart';
+import 'package:wapar/provider/product_povider.dart';
 import 'package:wapar/widgets/my_button.dart';
 import 'package:wapar/widgets/my_list_tile.dart';
 
@@ -122,6 +124,7 @@ class _ProfileEditState extends State<ProfileEdit> {
 
   @override
   Widget build(BuildContext context) {
+    ProductProvider provider = Provider.of<ProductProvider>(context);
     return ListView(
       children: <Widget>[
         MyTextField(
@@ -174,12 +177,16 @@ class _ProfileEditState extends State<ProfileEdit> {
         SizedBox(
           height: 10,
         ),
-        MyButton(
-          text: "Update",
-          whenPress: () {
-            checkValid();
-          },
-        )
+        provider.loading
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : MyButton(
+                text: "Update",
+                whenPress: () {
+                  checkValid();
+                },
+              )
       ],
     );
   }

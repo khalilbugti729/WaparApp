@@ -30,17 +30,12 @@ class DetailScreen extends StatelessWidget {
             fit: BoxFit.fill,
           ),
         ),
-        Positioned(
-          top: 30,
-          left: -15,
-          child: FlatButton(
-            onPressed: () {
-              Navigator.of(ctx).pop();
-            },
-            child: Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-            ),
+        FlatButton(
+          onPressed: () {
+            Navigator.of(ctx).pop();
+          },
+          child: Icon(
+            Icons.arrow_back,
           ),
         ), // IconButton(icon: Icon(Icons.arrow_back), onPressed: () {})
       ],

@@ -4,9 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wapar/model/user.dart';
 import 'package:wapar/provider/product_povider.dart';
-import 'package:wapar/screens/admin.dart';
-import 'package:wapar/screens/login_screen.dart';
-import 'package:wapar/screens/profile_screen.dart';
 import 'package:wapar/widgets/my_drawer.dart';
 import 'package:wapar/widgets/single_product.dart';
 
@@ -46,6 +43,9 @@ class _HomeScreenState extends State<HomeScreen> {
         elevation: 0.0,
         centerTitle: true,
         title: Text("Wapar"),
+        actions: <Widget>[
+          IconButton(icon: Icon(Icons.search), onPressed: () {})
+        ],
       ),
       body: StreamBuilder(
         stream: Firestore.instance
@@ -59,6 +59,11 @@ class _HomeScreenState extends State<HomeScreen> {
             );
           }
           var document = snapShot.data.documents;
+          if (document.length == 0) {
+            return Center(
+              child: Text("Data not Found"),
+            );
+          }
           // print(snapShot.hasData);
           return ListView.builder(
             itemBuilder: (ctx, index) {

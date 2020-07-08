@@ -122,12 +122,39 @@ class _ListScreenState extends State<ListScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           content: Container(
-              height: 80,
+              height: 120,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Text("are you sure?"),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    width: double.infinity,
+                    child: Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.report_problem,
+                          color: Theme.of(context).errorColor,
+                        ),
+                        Text(
+                          "Warning:",
+                          style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).errorColor),
+                        ),
+                        Expanded(
+                          child: Text(
+                            "permanent delete!",
+                            style:
+                                TextStyle(color: Theme.of(context).errorColor),
+                          ),
+                        )
+                      ],
+                    ),
+                    height: 60,
+                    color: Colors.red[100],
+                  ),
                   Row(
                     children: <Widget>[
                       Expanded(

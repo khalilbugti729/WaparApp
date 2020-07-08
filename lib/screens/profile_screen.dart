@@ -222,11 +222,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     ProductProvider provider = Provider.of<ProductProvider>(context);
     User user = provider.getUserData;
-    if (provider.loading || user.userImageUrl == null) {
-      return Center(
-        child: CircularProgressIndicator(),
-      );
-    }
+    // if (provider.loading || user.userImageUrl == null) {
+    //   return Center(
+    //     child: CircularProgressIndicator(),
+    //   );
+    // }
 
     String imageUrl = user.userImageUrl;
     return WillPopScope(
