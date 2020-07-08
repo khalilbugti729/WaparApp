@@ -23,7 +23,7 @@ class _ListScreenState extends State<ListScreen> {
     user = await FirebaseAuth.instance.currentUser();
   }
 
-  Widget productListView(ctx, index, document) {
+  Widget productListView(ctx, index, document, provider) {
     return Container(
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
         margin: EdgeInsets.only(top: 10),
@@ -73,8 +73,6 @@ class _ListScreenState extends State<ListScreen> {
                                     document[index]['productPrice']),
                                 imagePath: document[index]['imagePath'],
                               );
-                              print("from List screen2 ");
-                              print(product.imagePath);
                               // ProductProvider provider =
                               //     Provider.of<ProductProvider>(context);
                               // provider.editScreenData(
@@ -106,7 +104,7 @@ class _ListScreenState extends State<ListScreen> {
                       ),
                       onPressed: () {
                         _showMyDialog(document[index]['productId'],
-                            document[index]['imagePath']);
+                            document[index]['imagePath'], provider);
                       },
                     ),
                   ),
@@ -117,7 +115,8 @@ class _ListScreenState extends State<ListScreen> {
         ));
   }
 
-  Future<void> _showMyDialog(String productId, String imagePath) async {
+  Future<void> _showMyDialog(
+      String productId, String imagePath, provider) async {
     return showDialog<void>(
       context: context, // user must tap button!
       builder: (BuildContext context) {
@@ -134,11 +133,9 @@ class _ListScreenState extends State<ListScreen> {
                       Expanded(
                           child: FlatButton(
                               color: Colors.red[400],
-                              onPressed: () {
-                                ProductProvider provider =
-                                    Provider.of<ProductProvider>(context,
-                                        listen: false);
-                                provider.deleteProduct(productId, imagePath);
+                              onPressed: () async {
+                                await provider.deleteProduct(
+                                    productId, imagePath);
                                 Navigator.of(context).pop();
                               },
                               child: Text(
@@ -165,6 +162,9 @@ class _ListScreenState extends State<ListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ProductProvider provider = Provider.of<ProductProvider>(
+      context,
+    );
     return FutureBuilder(
       future: Firestore.instance.collection('Product').getDocuments(),
       builder: (context, snapshot) {
@@ -184,7 +184,7 @@ class _ListScreenState extends State<ListScreen> {
             itemCount: document.length,
             itemBuilder: (ctx, index) {
               if (user.uid == document[index]['userId']) {
-                return productListView(ctx, index, document);
+                return productListView(ctx, index, document, provider);
               }
               return Container();
             });

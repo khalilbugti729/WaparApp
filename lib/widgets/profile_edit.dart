@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wapar/model/user.dart';
 import 'package:wapar/widgets/my_button.dart';
 import 'package:wapar/widgets/my_list_tile.dart';
 
@@ -7,8 +8,9 @@ import 'my_text_field.dart';
 class ProfileEdit extends StatefulWidget {
   final Function checkValid;
   final scaffoldKey;
+  final User userData;
 
-  ProfileEdit({this.scaffoldKey, this.checkValid});
+  ProfileEdit({this.scaffoldKey, this.checkValid, this.userData});
 
   static Pattern emailPattern =
       r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
@@ -20,23 +22,28 @@ class ProfileEdit extends StatefulWidget {
 }
 
 class _ProfileEditState extends State<ProfileEdit> {
+  String email;
+
+  TextEditingController _phoneNumber;
+
+  TextEditingController _fullName;
+
+  String _gender;
+
+  TextEditingController _address;
   bool isMale = true;
-  RegExp emailRegix = new RegExp(ProfileEdit.emailPattern);
   RegExp phoneRegix = new RegExp(ProfileEdit.phoneNumberPattern);
 
-  final TextEditingController _email =
-      TextEditingController(text: "Khalilbugti@gmail.com");
+  @override
+  void initState() {
+    super.initState();
 
-  final TextEditingController _phoneNumber =
-      TextEditingController(text: "03224545699");
-
-  final TextEditingController _fullName =
-      TextEditingController(text: "Khalil Bugti");
-
-  String _gender = "Male";
-
-  final TextEditingController _address =
-      TextEditingController(text: "Phong Colony Sui");
+    email = widget.userData.userEmail;
+    _phoneNumber = TextEditingController(text: widget.userData.userPhoneNumber);
+    _gender = widget.userData.userGender;
+    _fullName = TextEditingController(text: widget.userData.userName);
+    _address = TextEditingController(text: widget.userData.userAddress);
+  }
 
   void toggleGender() {
     setState(() {
@@ -52,10 +59,9 @@ class _ProfileEditState extends State<ProfileEdit> {
   void checkValid() {
     bool fullName = _fullName.text.trim().isEmpty;
     bool phoneNumber = _phoneNumber.text.trim().isEmpty;
-    bool email = _email.text.trim().isEmpty;
     bool myAddress = _address.text.trim().isEmpty;
 
-    if (fullName && phoneNumber && email && myAddress) {
+    if (fullName && phoneNumber && myAddress) {
       widget.scaffoldKey.currentState.showSnackBar(
         SnackBar(
           backgroundColor: Theme.of(context).errorColor,
@@ -74,25 +80,7 @@ class _ProfileEditState extends State<ProfileEdit> {
       );
       return;
     }
-    if (email) {
-      widget.scaffoldKey.currentState.showSnackBar(
-        SnackBar(
-          backgroundColor: Theme.of(context).errorColor,
-          content: Text("Email is Empty"),
-        ),
-      );
-      return;
-    }
 
-    if (!emailRegix.hasMatch(_email.text)) {
-      widget.scaffoldKey.currentState.showSnackBar(
-        SnackBar(
-          backgroundColor: Theme.of(context).errorColor,
-          content: Text("Email is not Valid"),
-        ),
-      );
-      return;
-    }
     if (phoneNumber) {
       widget.scaffoldKey.currentState.showSnackBar(
         SnackBar(
@@ -123,11 +111,13 @@ class _ProfileEditState extends State<ProfileEdit> {
       return;
     }
     widget.checkValid(
-        email: _email.text,
+        email: email,
         address: _address.text,
         fullName: _fullName.text,
         gender: _gender,
-        phoneNumber: int.parse(_phoneNumber.text));
+        phoneNumber: _phoneNumber.text,
+        userImageUrl: widget.userData.userImageUrl,
+        userImagePath: widget.userData.userImagePath);
   }
 
   @override
@@ -141,9 +131,19 @@ class _ProfileEditState extends State<ProfileEdit> {
         SizedBox(
           height: 10,
         ),
-        MyTextField(
-          placeHolder: "Email",
-          value: _email,
+        GestureDetector(
+          onTap: () {
+            widget.scaffoldKey.currentState.showSnackBar(
+              SnackBar(
+                backgroundColor: Theme.of(context).errorColor,
+                content: Text("Email cannot change"),
+              ),
+            );
+          },
+          child: MyListTile(
+            myKey: "Email",
+            value: email,
+          ),
         ),
         SizedBox(
           height: 10,

@@ -3,18 +3,20 @@ import 'package:flutter/material.dart';
 class User {
   String userName;
   String userId;
-  String userImage;
+  String userImageUrl;
   String userAddress;
-  int userPhoneNumber;
+  String userPhoneNumber;
   String userEmail;
   String userGender;
+  String userImagePath;
   User({
     @required this.userPhoneNumber,
-    @required this. userId,
-    @required this.userImage,
-    @required this. userEmail,
-    @required this. userGender,
-    @required this. userAddress,
-    @required this.userName, 
+    @required this.userId,
+    @required this.userImageUrl,
+    @required this.userImagePath,
+    @required this.userEmail,
+    @required this.userGender,
+    @required this.userAddress,
+    @required this.userName,
   });
 }

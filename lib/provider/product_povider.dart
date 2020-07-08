@@ -12,7 +12,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProductProvider with ChangeNotifier {
   bool _isLoading = false;
-  User _authenticatedUser;
   var _auth = FirebaseAuth.instance;
   var _db = Firestore.instance;
 
@@ -34,6 +33,7 @@ class ProductProvider with ChangeNotifier {
 
   UnmodifiableListView get allProducts => UnmodifiableListView(_allProducts);
 
+  User _user;
   Future<void> deleteImage(String imageFileUrl) async {
     var fileUrl = Uri.decodeFull(Path.basename(imageFileUrl))
         .replaceAll(new RegExp(r'(\?alt).*'), '');
@@ -156,6 +156,24 @@ class ProductProvider with ChangeNotifier {
     }
   }
 
+  Future<Map<String, String>> _uploadSignup(File _image,
+      {String editImagePath}) async {
+    String _imagePath = editImagePath == null ? _image.path : editImagePath;
+
+    StorageReference storageReference = FirebaseStorage.instance
+        .ref()
+        .child('profileImages/${Path.basename(_imagePath)}');
+    StorageUploadTask uploadTask = storageReference.putFile(_image);
+    StorageTaskSnapshot task = await uploadTask.onComplete;
+    final String _imageUrl = (await task.ref.getDownloadURL());
+
+    Map<String, String> _downloadData = {
+      'imagePath': Path.basename(_imagePath),
+      'imageUrl': _imageUrl
+    };
+    return _downloadData;
+  }
+
   Future<Map<String, String>> _uploadFile(File _image,
       {String editImagePath}) async {
     String _imagePath = editImagePath == null ? _image.path : editImagePath;
@@ -219,35 +237,38 @@ class ProductProvider with ChangeNotifier {
   Future<Object> signUp(
       {String email,
       String password,
-      int phoneNumber,
-      String image,
+      String phoneNumber,
+      File image,
       String gender,
       String address,
       String fullName}) async {
     try {
+      Map<String, String> myImage = await _uploadSignup(image);
       _isLoading = true;
       notifyListeners();
       authResult = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
-      _authenticatedUser = User(
-          userPhoneNumber: phoneNumber,
-          userId: authResult.user.uid,
-          userImage: image,
-          userEmail: email,
-          userGender: gender,
-          userAddress: address,
-          userName: fullName);
+      // = User(
+      //     userPhoneNumber: phoneNumber,
+      //     userId: authResult.user.uid,
+      //     userImage: image,
+      //     userEmail: email,
+      //     userGender: gender,
+      //     userAddress: address,
+      //     userName: fullName);
 
       Firestore.instance
           .collection("User")
-          .document(_authenticatedUser.userId)
+          .document(authResult.user.uid)
           .setData({
-        "userPhoneNumber": _authenticatedUser.userPhoneNumber,
-        "userId": _authenticatedUser.userId,
-        "userImage": _authenticatedUser.userImage,
-        "userEmail": _authenticatedUser.userEmail,
-        "userGender": _authenticatedUser.userGender,
-        "userAddress": _authenticatedUser.userAddress
+        "userPhoneNumber": phoneNumber,
+        "userId": authResult.user.uid,
+        "userImage": myImage['imageUrl'],
+        "userPath": myImage['imagePath'],
+        "userEmail": email,
+        "userGender": gender,
+        "userAddress": address,
+        'userName': fullName,
       });
       _isLoading = false;
       notifyListeners();
@@ -287,6 +308,95 @@ class ProductProvider with ChangeNotifier {
         return message = error.message;
       }
       return message;
+    } catch (error) {
+      _isLoading = false;
+      notifyListeners();
+      return error;
+    }
+  }
+
+  Future<void> fetchUserData() async {
+    _isLoading = true;
+    notifyListeners();
+    var user = await _auth.currentUser();
+    QuerySnapshot dataInstance =
+        await Firestore.instance.collection("User").getDocuments();
+    List<DocumentSnapshot> data = dataInstance.documents;
+    data.forEach((element) {
+      if (element['userId'] == user.uid) {
+        _user = User(
+            userImagePath: element['userPath'],
+            userPhoneNumber: element['userPhoneNumber'],
+            userId: element['userId'],
+            userImageUrl: element['userImage'],
+            userEmail: element['userEmail'],
+            userGender: element['userGender'],
+            userAddress: element['userAddress'],
+            userName: element['userName']);
+      }
+    });
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  User get getUserData => _user;
+
+  Future<Object> updateUser(
+      {String email,
+      String address,
+      String fullName,
+      String gender,
+      String phoneNumber,
+      Object userImageUrl,
+      String userImagePath}) async {
+    // print(email);
+    // print(address);
+    // print(fullName);
+    // print(gender);
+    // print(phoneNumber);
+    // print(userImageUrl);
+    // print(userImagePath);
+
+    _isLoading = true;
+    notifyListeners();
+    var user = await _auth.currentUser();
+    try {
+      print(user.uid);
+      if (userImageUrl is File) {
+        Map<String, String> imageData =
+            await _uploadSignup(userImageUrl, editImagePath: userImagePath);
+        await Firestore.instance
+            .collection("User")
+            .document(user.uid)
+            .updateData({
+          'userName': fullName,
+          'userPhoneNumber': phoneNumber,
+          'userImage': imageData['imageUrl'],
+          'userPath': imageData['imagePath'],
+          'userId': user.uid,
+          'userEmail': email,
+          'userGender': gender,
+          'userAddress': address,
+        });
+      } else {
+        await Firestore.instance
+            .collection("User")
+            .document(user.uid)
+            .updateData({
+          'userPhoneNumber': phoneNumber,
+          'userId': authResult.user.uid,
+          'userImage': userImageUrl,
+          'userPath': userImagePath,
+          'userEmail': email,
+          'userGender': gender,
+          'userAddress': address,
+          'userName': fullName,
+        });
+      }
+      await fetchUserData();
+      _isLoading = false;
+      notifyListeners();
+      return null;
     } catch (error) {
       _isLoading = false;
       notifyListeners();

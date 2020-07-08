@@ -59,7 +59,7 @@ class _SignupScreenState extends State<SignupScreen> {
   Future profileImage(ImageSource mySource) async {
     final pickedFile = await ImagePicker()
         .getImage(
-            source: mySource, imageQuality: 50, maxWidth: 150, maxHeight: 150)
+            source: mySource, imageQuality: 80, maxHeight: 480, maxWidth: 720)
         .whenComplete(() => Navigator.of(context).pop());
     setState(() {
       _image = File(pickedFile.path);
@@ -116,9 +116,9 @@ class _SignupScreenState extends State<SignupScreen> {
       email: _email.text,
       fullName: _fullName.text,
       gender: _gender,
-      image: _image.path,
+      image: _image,
       password: _password.text,
-      phoneNumber: int.parse(_phoneNumber.text),
+      phoneNumber: _phoneNumber.text,
     );
     if (value == null) {
       Navigator.of(context).push(

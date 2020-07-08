@@ -360,6 +360,7 @@ class _EditScreenState extends State<EditScreen> {
               GestureDetector(
                 onTap: () {
                   _showMyDialog();
+                  FocusScope.of(context).unfocus();
                 },
                 child: Container(
                   constraints: BoxConstraints.expand(height: 200),

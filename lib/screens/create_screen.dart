@@ -314,6 +314,7 @@ class _CreateScreenState extends State<CreateScreen> {
         GestureDetector(
           onTap: () {
             _showMyDialog();
+            FocusScope.of(context).unfocus();
           },
           child: Container(
             color: Colors.white,
