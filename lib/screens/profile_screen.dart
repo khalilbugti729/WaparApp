@@ -15,18 +15,19 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  void waitData() async {
-    ProductProvider provider =
-        Provider.of<ProductProvider>(context, listen: false);
-    await provider.fetchUserData();
-  }
+  // void waitData() async {
+  //   ProductProvider provider =
+  //       Provider.of<ProductProvider>(context, listen: false);
+  //   await provider.fetchUserData();
+  // }
 
+  // var user;
+  // @override
+  // initState() {
+  //   super.initState();
+  //   waitData();
+  // }
   var user;
-  @override
-  initState() {
-    super.initState();
-    waitData();
-  }
 
   getUserId() async {
     user = await FirebaseAuth.instance.currentUser();
