@@ -6,7 +6,6 @@ import 'package:flutter/foundation.dart';
 import 'package:wapar/model/product.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
-import 'package:wapar/screens/edit_screen.dart';
 import '../model/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 

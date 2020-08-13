@@ -7,7 +7,6 @@ import 'package:wapar/widgets/my_button.dart';
 import 'package:wapar/widgets/my_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 import 'dart:io';
 
@@ -24,7 +23,6 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
-  var _auth = FirebaseAuth.instance;
   bool showPassword = true;
   bool showConfirmPassword = true;
 

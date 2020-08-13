@@ -312,7 +312,6 @@ class _CreateScreenState extends State<CreateScreen> {
           height: 10,
         ),
         MyTextField(
-          myKeyboardtypeNumber: false,
           placeHolder: "Product Name",
           value: _productName,
         ),
@@ -320,7 +319,6 @@ class _CreateScreenState extends State<CreateScreen> {
           height: 10,
         ),
         MyTextField(
-          myKeyboardtypeNumber: false,
           placeHolder: "Product Company",
           value: _productCompany,
         ),
@@ -328,7 +326,6 @@ class _CreateScreenState extends State<CreateScreen> {
           height: 10,
         ),
         MyTextField(
-          myKeyboardtypeNumber: false,
           placeHolder: "Product Model",
           value: _productModel,
         ),
@@ -336,7 +333,6 @@ class _CreateScreenState extends State<CreateScreen> {
           height: 10,
         ),
         MyTextField(
-          myKeyboardtypeNumber: true,
           placeHolder: "Product Price",
           value: _productPrice,
         ),
@@ -356,7 +352,6 @@ class _CreateScreenState extends State<CreateScreen> {
           height: 10,
         ),
         MyTextField(
-          myKeyboardtypeNumber: false,
           placeHolder: "Product Address",
           value: _productAddress,
         ),
@@ -364,7 +359,6 @@ class _CreateScreenState extends State<CreateScreen> {
           height: 10,
         ),
         MyTextField(
-          myKeyboardtypeNumber: false,
           placeHolder: "Product Description",
           value: _productDescription,
         ),
@@ -372,7 +366,6 @@ class _CreateScreenState extends State<CreateScreen> {
           height: 10,
         ),
         MyTextField(
-          myKeyboardtypeNumber: false,
           placeHolder: "Phone Number",
           value: _productPhoneNumber,
         ),

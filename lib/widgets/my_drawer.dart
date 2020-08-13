@@ -1,8 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:wapar/model/user.dart';
-import 'package:wapar/provider/product_povider.dart';
 import 'package:wapar/screens/admin.dart';
 import 'package:wapar/screens/home_screen.dart';
 import 'package:wapar/screens/login_screen.dart';

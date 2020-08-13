@@ -1,11 +1,11 @@
 import 'package:provider/provider.dart';
-import 'package:wapar/provider/product_povider.dart';
-import 'package:wapar/screens/signup_screen.dart';
-import 'package:wapar/widgets/auth_end_text.dart';
-import 'package:wapar/widgets/my_button.dart';
-import 'package:wapar/widgets/my_text_field.dart';
+import '../provider/product_povider.dart';
+import '../screens/signup_screen.dart';
+import '../widgets/auth_end_text.dart';
+import '../widgets/my_button.dart';
+import '../widgets/my_text_field.dart';
 import 'package:flutter/material.dart';
-import 'package:wapar/widgets/password_text_field.dart';
+import '../widgets/password_text_field.dart';
 import 'home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
