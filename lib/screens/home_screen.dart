@@ -5,6 +5,7 @@ import 'package:wapar/model/user.dart';
 import 'package:wapar/provider/product_povider.dart';
 import 'package:wapar/widgets/my_drawer.dart';
 import 'package:wapar/widgets/single_product.dart';
+import 'package:time_formatter/time_formatter.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key}) : super(key: key);
@@ -41,7 +42,11 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         elevation: 0.0,
         centerTitle: true,
-        title: Text("Wapar"),
+        title: Image.asset(
+          'assets/logo.png',
+          color: Colors.white,
+          width: 55,
+        ),
         actions: <Widget>[
           IconButton(icon: Icon(Icons.search), onPressed: () {})
         ],
@@ -66,6 +71,11 @@ class _HomeScreenState extends State<HomeScreen> {
           // print(snapShot.hasData);
           return ListView.builder(
             itemBuilder: (ctx, index) {
+              Timestamp timeStamp = document[index]['timeStamp'];
+              DateTime date = new DateTime.fromMillisecondsSinceEpoch(
+                  timeStamp.millisecondsSinceEpoch);
+              var nowTime = date.millisecondsSinceEpoch;
+              String formatted = formatTime(nowTime);
               return Column(
                 children: <Widget>[
                   SizedBox(

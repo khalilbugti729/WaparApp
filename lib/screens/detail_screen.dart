@@ -110,19 +110,30 @@ class DetailScreen extends StatelessWidget {
         children: <Widget>[
           renderImage(ctx: context, img: imageUrl),
           SizedBox(height: 10),
-          infoDataString(ctx: context, key: "Name", value: name),
+          Expanded(
+              child: infoDataString(ctx: context, key: "Name", value: name)),
           SizedBox(height: 10),
-          infoDataString(ctx: context, key: "Description", value: description),
+          Expanded(
+              child: infoDataString(
+                  ctx: context, key: "Description", value: description)),
           SizedBox(height: 10),
-          infoDataDouble(ctx: context, key: "Price", value: price),
+          Expanded(
+              child: infoDataDouble(ctx: context, key: "Price", value: price)),
           SizedBox(height: 10),
-          infoDataString(ctx: context, key: "Phone Number", value: phoneNumber),
+          Expanded(
+              child: infoDataString(
+                  ctx: context, key: "Phone Number", value: phoneNumber)),
           SizedBox(height: 10),
-          infoDataString(ctx: context, key: "Address", value: address),
+          Expanded(
+              child:
+                  infoDataString(ctx: context, key: "Address", value: address)),
           SizedBox(height: 10),
-          infoDataString(ctx: context, key: "Model", value: model),
+          Expanded(
+              child: infoDataString(ctx: context, key: "Model", value: model)),
           SizedBox(height: 10),
-          infoDataString(ctx: context, key: "Company", value: company),
+          Expanded(
+              child:
+                  infoDataString(ctx: context, key: "Company", value: company)),
           SizedBox(height: 10),
         ],
       ),

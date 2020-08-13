@@ -80,17 +80,29 @@ class SingleProduct extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Text(
-            'Rs:${price.toString()}',
-            style: TextStyle(fontSize: 17),
+          Expanded(
+            child: Center(
+              child: Text(
+                'Rs:${price.toString()}',
+                style: TextStyle(fontSize: 17),
+              ),
+            ),
           ),
-          Text(
-            company,
-            style: TextStyle(fontSize: 17),
+          Expanded(
+            child: Center(
+              child: Text(
+                company,
+                style: TextStyle(fontSize: 17),
+              ),
+            ),
           ),
-          Text(
-            model,
-            style: TextStyle(fontSize: 17),
+          Expanded(
+            child: Center(
+              child: Text(
+                model,
+                style: TextStyle(fontSize: 17),
+              ),
+            ),
           )
         ],
       ),

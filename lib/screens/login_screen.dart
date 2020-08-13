@@ -121,10 +121,6 @@ class _LoginScreenState extends State<LoginScreen> {
             ],
           ),
         ),
-        CircleAvatar(
-          radius: 25,
-          backgroundImage: AssetImage('assets/k.jpg'),
-        ),
       ],
     );
   }
