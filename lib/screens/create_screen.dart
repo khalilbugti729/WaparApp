@@ -382,7 +382,7 @@ class _CreateScreenState extends State<CreateScreen> {
             constraints: BoxConstraints.expand(height: 200),
             child: _image == null
                 ? Image.asset(
-                    "assets/car.png",
+                    "assets/car.jpg",
                     fit: BoxFit.cover,
                   )
                 : Image.file(

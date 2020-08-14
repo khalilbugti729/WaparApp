@@ -6,6 +6,8 @@ import 'package:wapar/provider/product_povider.dart';
 import 'package:wapar/widgets/my_drawer.dart';
 import 'package:wapar/widgets/single_product.dart';
 import 'package:time_formatter/time_formatter.dart';
+import 'package:firebase_admob/firebase_admob.dart';
+import '../helper/ad_manager.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key}) : super(key: key);
@@ -24,6 +26,13 @@ class _HomeScreenState extends State<HomeScreen> {
   initState() {
     super.initState();
     waitData();
+
+    FirebaseAdMob.instance.initialize(appId: AdManager.appId);
+    BannerAd _bannerAd =
+        BannerAd(adUnitId: AdManager.bannerAdUnitId, size: AdSize.banner);
+    _bannerAd
+      ..load()
+      ..show(anchorType: AnchorType.bottom);
   }
 
   @override
