@@ -22,17 +22,23 @@ class _HomeScreenState extends State<HomeScreen> {
     await provider.fetchUserData();
   }
 
+  BannerAd _bannerAd;
   @override
   initState() {
     super.initState();
     waitData();
 
     FirebaseAdMob.instance.initialize(appId: AdManager.appId);
-    BannerAd _bannerAd =
+    _bannerAd =
         BannerAd(adUnitId: AdManager.bannerAdUnitId, size: AdSize.banner);
     _bannerAd
       ..load()
       ..show(anchorType: AnchorType.bottom);
+  }
+
+  void dispose() {
+    _bannerAd?.dispose();
+    super.dispose();
   }
 
   @override
@@ -85,24 +91,27 @@ class _HomeScreenState extends State<HomeScreen> {
                   timeStamp.millisecondsSinceEpoch);
               var nowTime = date.millisecondsSinceEpoch;
               String formatted = formatTime(nowTime);
-              return Column(
-                children: <Widget>[
-                  SizedBox(
-                    height: 10,
-                  ),
-                  SingleProduct(
-                    time: formatted,
-                    type: document[index]['productType'],
-                    address: document[index]['productAddress'],
-                    description: document[index]['productDescription'],
-                    imageUrl: document[index]['imageUrl'],
-                    name: document[index]['productName'],
-                    phoneNumber: document[index]['productPhoneNumber'],
-                    company: document[index]['productCompany'],
-                    price: double.parse(document[index]['productPrice']),
-                    model: document[index]['productModel'],
-                  ),
-                ],
+              return Container(
+                margin: const EdgeInsets.only(bottom: 50),
+                child: Column(
+                  children: <Widget>[
+                    SizedBox(
+                      height: 10,
+                    ),
+                    SingleProduct(
+                      time: formatted,
+                      type: document[index]['productType'],
+                      address: document[index]['productAddress'],
+                      description: document[index]['productDescription'],
+                      imageUrl: document[index]['imageUrl'],
+                      name: document[index]['productName'],
+                      phoneNumber: document[index]['productPhoneNumber'],
+                      company: document[index]['productCompany'],
+                      price: double.parse(document[index]['productPrice']),
+                      model: document[index]['productModel'],
+                    ),
+                  ],
+                ),
               );
             },
             itemCount: document.length,

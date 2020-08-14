@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_admob/firebase_admob.dart';
+import '../helper/ad_manager.dart';
 
-class DetailScreen extends StatelessWidget {
+class DetailScreen extends StatefulWidget {
   final String description;
   final String name;
   final double price;
@@ -20,6 +22,52 @@ class DetailScreen extends StatelessWidget {
       @required this.imageUrl,
       @required this.name});
 
+  @override
+  _DetailScreenState createState() => _DetailScreenState();
+}
+
+class _DetailScreenState extends State<DetailScreen> {
+  InterstitialAd _interstitialAd;
+
+  bool _isInterstitialAdReady;
+
+  void _loadInterstitialAd() {
+    _interstitialAd.load();
+  }
+
+  void _onInterstitialAdEvent(MobileAdEvent event) {
+    switch (event) {
+      case MobileAdEvent.loaded:
+        _isInterstitialAdReady = true;
+        break;
+      case MobileAdEvent.failedToLoad:
+        _isInterstitialAdReady = false;
+        break;
+      case MobileAdEvent.closed:
+        break;
+      default:
+      // do nothing
+    }
+  }
+
+  @override
+  void dispose() {
+    _interstitialAd?.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _isInterstitialAdReady = false;
+    _interstitialAd = InterstitialAd(
+      adUnitId: AdManager.interstitialAdUnitId,
+      listener: _onInterstitialAdEvent,
+    );
+    _loadInterstitialAd();
+    _isInterstitialAdReady == true ? _interstitialAd.show() : Container();
+  }
+
   Widget renderImage({BuildContext ctx, String img}) {
     return Stack(
       children: <Widget>[
@@ -30,17 +78,18 @@ class DetailScreen extends StatelessWidget {
             fit: BoxFit.fill,
           ),
         ),
-        CircleAvatar(
-          radius: 15,
-          child: IconButton(
-            onPressed: () {
-              Navigator.of(ctx).pop();
-            },
-            icon: Icon(
-              Icons.arrow_back,
-            ),
+        MaterialButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          color: Colors.black,
+          textColor: Colors.white,
+          child: Icon(
+            Icons.arrow_back,
+            size: 24,
           ),
-        ), // IconButton(icon: Icon(Icons.arrow_back), onPressed: () {})
+          shape: CircleBorder(),
+        ),
       ],
     );
   }
@@ -110,32 +159,37 @@ class DetailScreen extends StatelessWidget {
     return Scaffold(
       body: ListView(
         children: <Widget>[
-          renderImage(ctx: context, img: imageUrl),
-          SizedBox(height: 10),
-          Expanded(
-              child: infoDataString(ctx: context, key: "Name", value: name)),
+          renderImage(ctx: context, img: widget.imageUrl),
           SizedBox(height: 10),
           Expanded(
               child: infoDataString(
-                  ctx: context, key: "Description", value: description)),
-          SizedBox(height: 10),
-          Expanded(
-              child: infoDataDouble(ctx: context, key: "Price", value: price)),
+                  ctx: context, key: "Name", value: widget.name)),
           SizedBox(height: 10),
           Expanded(
               child: infoDataString(
-                  ctx: context, key: "Phone Number", value: phoneNumber)),
+                  ctx: context, key: "Description", value: widget.description)),
           SizedBox(height: 10),
           Expanded(
-              child:
-                  infoDataString(ctx: context, key: "Address", value: address)),
+              child: infoDataDouble(
+                  ctx: context, key: "Price", value: widget.price)),
           SizedBox(height: 10),
           Expanded(
-              child: infoDataString(ctx: context, key: "Model", value: model)),
+              child: infoDataString(
+                  ctx: context,
+                  key: "Phone Number",
+                  value: widget.phoneNumber)),
           SizedBox(height: 10),
           Expanded(
-              child:
-                  infoDataString(ctx: context, key: "Company", value: company)),
+              child: infoDataString(
+                  ctx: context, key: "Address", value: widget.address)),
+          SizedBox(height: 10),
+          Expanded(
+              child: infoDataString(
+                  ctx: context, key: "Model", value: widget.model)),
+          SizedBox(height: 10),
+          Expanded(
+              child: infoDataString(
+                  ctx: context, key: "Company", value: widget.company)),
           SizedBox(height: 10),
         ],
       ),

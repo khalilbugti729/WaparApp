@@ -4,30 +4,75 @@ import 'package:wapar/screens/create_screen.dart';
 import 'package:wapar/screens/edit_screen.dart';
 import 'package:wapar/screens/home_screen.dart';
 import 'package:wapar/screens/list_screen.dart';
+import 'package:firebase_admob/firebase_admob.dart';
+import '../helper/ad_manager.dart';
 
-class Admin extends StatelessWidget {
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+class Admin extends StatefulWidget {
   final pageIndex;
   final Product product;
   Admin(this.pageIndex, this.product);
-  // TabController _tabController;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _tabController = new TabController(vsync: this, length: 3);
-  // }
+  @override
+  _AdminState createState() => _AdminState();
+}
 
-  // @override
-  // void dispose() {
-  //   _tabController.dispose();
-  //   super.dispose();
-  // }
+class _AdminState extends State<Admin> {
+  bool _isRewardedAdReady;
+
+  void _loadRewardedAd() {
+    RewardedVideoAd.instance.load(
+      targetingInfo: MobileAdTargetingInfo(),
+      adUnitId: AdManager.rewardedAdUnitId,
+    );
+  }
+
+  void _onRewardedAdEvent(RewardedVideoAdEvent event,
+      {String rewardType, int rewardAmount}) {
+    switch (event) {
+      case RewardedVideoAdEvent.loaded:
+        setState(() {
+          _isRewardedAdReady = true;
+        });
+        break;
+      case RewardedVideoAdEvent.closed:
+        setState(() {
+          _isRewardedAdReady = false;
+        });
+        _loadRewardedAd();
+        break;
+      case RewardedVideoAdEvent.failedToLoad:
+        setState(() {
+          _isRewardedAdReady = false;
+        });
+        break;
+      case RewardedVideoAdEvent.rewarded:
+        break;
+      default:
+      // do nothing
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _isRewardedAdReady = false;
+    RewardedVideoAd.instance.listener = _onRewardedAdEvent;
+    _loadRewardedAd();
+    RewardedVideoAd.instance.show();
+  }
+
+  @override
+  void dispose() {
+    RewardedVideoAd.instance.listener = null;
+    super.dispose();
+  }
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      initialIndex: pageIndex,
+      initialIndex: widget.pageIndex,
       length: 3,
       child: WillPopScope(
         onWillPop: () async {
@@ -74,7 +119,7 @@ class Admin extends StatelessWidget {
                 scaffoldKey: _scaffoldKey,
               ),
               EditScreen(
-                product,
+                widget.product,
                 scaffoldKey: _scaffoldKey,
               ),
               ListScreen(),

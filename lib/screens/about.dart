@@ -37,7 +37,7 @@ class About extends StatelessWidget {
               Text(
                   "Thanks for my Students: Mirak, Aqeel, Sabir, Yakoob, Assar and Sabeel"),
               Text(
-                  "Specially Thanks to Mr. Abdul Kareem for Production and Also Mr.Jumma to Support us")
+                  "Specially Thanks to Mr. Abdul Kareem for Production and Also Mr.Jumma Khan to Support us")
             ],
           ),
         ),
