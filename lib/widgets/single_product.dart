@@ -11,8 +11,10 @@ class SingleProduct extends StatelessWidget {
   final String phoneNumber;
   final String imageUrl;
   final String name;
+  final String time;
   SingleProduct(
-      {this.phoneNumber,
+      {this.time,
+      this.phoneNumber,
       this.type,
       this.name,
       this.imageUrl,
@@ -38,7 +40,7 @@ class SingleProduct extends StatelessWidget {
           style: TextStyle(color: Colors.white),
         ),
         trailing: Text(
-          "3 hours ago",
+          time,
           style: TextStyle(color: Colors.white),
         ),
       ),

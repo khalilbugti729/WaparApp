@@ -30,12 +30,15 @@ class DetailScreen extends StatelessWidget {
             fit: BoxFit.fill,
           ),
         ),
-        FlatButton(
-          onPressed: () {
-            Navigator.of(ctx).pop();
-          },
-          child: Icon(
-            Icons.arrow_back,
+        CircleAvatar(
+          radius: 15,
+          child: IconButton(
+            onPressed: () {
+              Navigator.of(ctx).pop();
+            },
+            icon: Icon(
+              Icons.arrow_back,
+            ),
           ),
         ), // IconButton(icon: Icon(Icons.arrow_back), onPressed: () {})
       ],
@@ -105,7 +108,6 @@ class DetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
       body: ListView(
         children: <Widget>[
           renderImage(ctx: context, img: imageUrl),

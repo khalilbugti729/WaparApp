@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:wapar/model/user.dart';
+import 'package:wapar/screens/about.dart';
 import 'package:wapar/screens/admin.dart';
+import 'package:wapar/screens/contact.dart';
 import 'package:wapar/screens/home_screen.dart';
 import 'package:wapar/screens/login_screen.dart';
 import 'package:wapar/screens/profile_screen.dart';
@@ -86,7 +88,10 @@ class _MyDrawerState extends State<MyDrawer> {
           singleListTile(
             myIcon: Icons.info,
             myText: "About",
-            whenPressed: () {},
+            whenPressed: () {
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (ctx) => About()));
+            },
           ),
           SizedBox(
             height: 8,
@@ -94,7 +99,10 @@ class _MyDrawerState extends State<MyDrawer> {
           singleListTile(
             myIcon: Icons.call,
             myText: "Contact",
-            whenPressed: () {},
+            whenPressed: () {
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (ctx) => Contact()));
+            },
           ),
           SizedBox(
             height: 8,

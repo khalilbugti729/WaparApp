@@ -82,6 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: 10,
                   ),
                   SingleProduct(
+                    time: formatted,
                     type: document[index]['productType'],
                     address: document[index]['productAddress'],
                     description: document[index]['productDescription'],
