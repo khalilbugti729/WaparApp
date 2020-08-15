@@ -28,14 +28,14 @@ class SingleProduct extends StatelessWidget {
     return Container(
       color: Theme.of(context).primaryColor,
       child: ListTile(
-        leading: CircleAvatar(
-          backgroundImage: AssetImage('assets/k.jpg'),
-        ),
+        // leading: CircleAvatar(
+        //   backgroundImage: AssetImage('assets/k.jpg'),
+        // ),
+        // title: Text(
+        //   "Khalil Bugti",
+        //   style: TextStyle(color: Colors.white),
+        // ),
         title: Text(
-          "Khalil Bugti",
-          style: TextStyle(color: Colors.white),
-        ),
-        subtitle: Text(
           type,
           style: TextStyle(color: Colors.white),
         ),

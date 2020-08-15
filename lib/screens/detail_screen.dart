@@ -161,35 +161,21 @@ class _DetailScreenState extends State<DetailScreen> {
         children: <Widget>[
           renderImage(ctx: context, img: widget.imageUrl),
           SizedBox(height: 10),
-          Expanded(
-              child: infoDataString(
-                  ctx: context, key: "Name", value: widget.name)),
+          infoDataString(ctx: context, key: "Name", value: widget.name),
           SizedBox(height: 10),
-          Expanded(
-              child: infoDataString(
-                  ctx: context, key: "Description", value: widget.description)),
+          infoDataString(
+              ctx: context, key: "Description", value: widget.description),
           SizedBox(height: 10),
-          Expanded(
-              child: infoDataDouble(
-                  ctx: context, key: "Price", value: widget.price)),
+          infoDataDouble(ctx: context, key: "Price", value: widget.price),
           SizedBox(height: 10),
-          Expanded(
-              child: infoDataString(
-                  ctx: context,
-                  key: "Phone Number",
-                  value: widget.phoneNumber)),
+          infoDataString(
+              ctx: context, key: "Phone Number", value: widget.phoneNumber),
           SizedBox(height: 10),
-          Expanded(
-              child: infoDataString(
-                  ctx: context, key: "Address", value: widget.address)),
+          infoDataString(ctx: context, key: "Address", value: widget.address),
           SizedBox(height: 10),
-          Expanded(
-              child: infoDataString(
-                  ctx: context, key: "Model", value: widget.model)),
+          infoDataString(ctx: context, key: "Model", value: widget.model),
           SizedBox(height: 10),
-          Expanded(
-              child: infoDataString(
-                  ctx: context, key: "Company", value: widget.company)),
+          infoDataString(ctx: context, key: "Company", value: widget.company),
           SizedBox(height: 10),
         ],
       ),
