@@ -72,21 +72,26 @@ class _DetailScreenState extends State<DetailScreen> {
     return Stack(
       children: <Widget>[
         FittedBox(
-          // constraints: BoxConstraints.expand(height: 370),
-          child: Image.network(
-            img,
-            fit: BoxFit.fill,
+          child: FadeInImage.assetNetwork(
+            image: img,
+            fit: BoxFit.cover,
+            placeholder: 'assets/car.jpg',
           ),
+
+          // child: Image.network(
+          //   img,
+          //   fit: BoxFit.fill,
+          // ),
         ),
         MaterialButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          color: Colors.black,
+          color: Color(0x50000000),
           textColor: Colors.white,
           child: Icon(
             Icons.arrow_back,
-            size: 24,
+            size: 20,
           ),
           shape: CircleBorder(),
         ),

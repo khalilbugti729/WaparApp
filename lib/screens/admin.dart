@@ -58,7 +58,7 @@ class _AdminState extends State<Admin> {
     _isRewardedAdReady = false;
     RewardedVideoAd.instance.listener = _onRewardedAdEvent;
     _loadRewardedAd();
-    RewardedVideoAd.instance.show();
+    _isRewardedAdReady ? RewardedVideoAd.instance.show() : Container();
   }
 
   @override

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:wapar/model/user.dart';
+import 'package:wapar/provider/product_povider.dart';
 import 'my_list_tile.dart';
 
 class Profile extends StatelessWidget {
   final User userData;
   Profile({this.userData});
+
   @override
   Widget build(BuildContext context) {
     return ListView(

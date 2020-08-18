@@ -67,11 +67,20 @@ class SingleProduct extends StatelessWidget {
       },
       child: Container(
         constraints: BoxConstraints.expand(height: 300),
-        child: Image.network(
-          imageUrl,
+        child: FadeInImage.assetNetwork(
+          image: imageUrl,
+          width: 50.0,
+          height: 50.0,
           fit: BoxFit.cover,
+          placeholder: 'assets/car.jpg',
         ),
       ),
+
+      // child: Image.network(
+      //   imageUrl,
+      //   fit: BoxFit.cover,
+      // ),
+      // ),
     );
   }
 

@@ -1,4 +1,4 @@
-package com.example.wapar
+package com.fish.wapar
 
 import io.flutter.embedding.android.FlutterActivity
 

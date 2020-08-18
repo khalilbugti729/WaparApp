@@ -10,29 +10,14 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
 class ProfileScreen extends StatefulWidget {
+  final User user;
+  ProfileScreen({this.user});
+
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  // void waitData() async {
-  //   ProductProvider provider =
-  //       Provider.of<ProductProvider>(context, listen: false);
-  //   await provider.fetchUserData();
-  // }
-
-  // var user;
-  // @override
-  // initState() {
-  //   super.initState();
-  //   waitData();
-  // }
-  var user;
-
-  getUserId() async {
-    user = await FirebaseAuth.instance.currentUser();
-  }
-
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   bool editMode = false;
 
@@ -177,9 +162,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget bottomPart(context, ProductProvider provider) {
-    User user = provider.getUserData;
+    // User user = provider.getUserData;
 
-    if (provider.loading || user.userImageUrl == null) {
+    if (provider.loading || widget.user.userImageUrl == null) {
       return Center(
         child: CircularProgressIndicator(),
       );
@@ -209,11 +194,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ? ProfileEdit(
                 scaffoldKey: _scaffoldKey,
                 checkValid: _checkVerify,
-                userData: user,
+                userData: widget.user,
               )
-            : Profile(
-                userData: user,
-              ),
+            : Profile(userData: widget.user),
       ),
     );
   }
@@ -221,14 +204,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     ProductProvider provider = Provider.of<ProductProvider>(context);
-    User user = provider.getUserData;
+    // User user = provider.getUserData;
+
     // if (provider.loading || user.userImageUrl == null) {
     //   return Center(
     //     child: CircularProgressIndicator(),
     //   );
     // }
 
-    String imageUrl = user.userImageUrl;
+    String imageUrl = widget.user.userImageUrl;
     return WillPopScope(
       onWillPop: () async {
         return Navigator.of(context).pushReplacement(

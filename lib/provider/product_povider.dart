@@ -8,8 +8,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import '../model/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductProvider with ChangeNotifier {
+  String phone;
+  SharedPreferences myPrefs;
   bool _isLoading = false;
   var _auth = FirebaseAuth.instance;
   var _db = Firestore.instance;
@@ -247,15 +250,6 @@ class ProductProvider with ChangeNotifier {
       notifyListeners();
       authResult = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
-      // = User(
-      //     userPhoneNumber: phoneNumber,
-      //     userId: authResult.user.uid,
-      //     userImage: image,
-      //     userEmail: email,
-      //     userGender: gender,
-      //     userAddress: address,
-      //     userName: fullName);
-
       Firestore.instance
           .collection("User")
           .document(authResult.user.uid)
@@ -269,6 +263,7 @@ class ProductProvider with ChangeNotifier {
         "userAddress": address,
         'userName': fullName,
       });
+      fetchUserData();
       _isLoading = false;
       notifyListeners();
       return null;
@@ -296,6 +291,7 @@ class ProductProvider with ChangeNotifier {
       notifyListeners();
       authResult = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
+      fetchUserData();
       _isLoading = false;
       notifyListeners();
       return null;
@@ -314,10 +310,9 @@ class ProductProvider with ChangeNotifier {
     }
   }
 
-  Future<void> fetchUserData() async {
-    _isLoading = true;
-    notifyListeners();
+  fetchUserData() async {
     var user = await _auth.currentUser();
+    myPrefs = await SharedPreferences.getInstance();
     QuerySnapshot dataInstance =
         await Firestore.instance.collection("User").getDocuments();
     List<DocumentSnapshot> data = dataInstance.documents;
@@ -333,12 +328,13 @@ class ProductProvider with ChangeNotifier {
             userAddress: element['userAddress'],
             userName: element['userName']);
       }
+      notifyListeners();
     });
-    _isLoading = false;
-    notifyListeners();
   }
 
-  User get getUserData => _user;
+  User get getUserData {
+    return _user;
+  }
 
   Future<Object> updateUser(
       {String email,
